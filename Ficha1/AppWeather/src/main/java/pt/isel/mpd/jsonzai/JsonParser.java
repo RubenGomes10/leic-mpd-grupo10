@@ -1,12 +1,13 @@
 package pt.isel.mpd.jsonzai;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import pt.isel.mpd.weather.WeatherDay;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Ruben Gomes on 31/03/2015.
@@ -25,14 +26,29 @@ public class JsonParser {
      */
 
     public <T> T toObject(String src, Class<T> dest) {
+        if(dest == null) throw new IllegalArgumentException("no dest");//no object -> thow exception
+        if(src == null) throw new IllegalArgumentException("no src");//no src -> thow exception
 
         JSONObject jsonObj = null;
         T instance = null;
 
         try {
             jsonObj = new JSONObject(src);
-            instance = (T) dest.getConstructors()[0].newInstance(new Object[]{jsonObj});
-        } catch (JSONException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            instance = dest.newInstance();
+
+
+            Field[] x = dest.getDeclaredFields(); // TODO: verificar a diferença getFields e getDeclaredFields
+            String s=null;
+
+            for (Field f :x){                           // por cada Field da Classe vai verificar se existe o mesmo nome na source
+                Object value = jsonObj.get(f.getName());
+
+                f.setAccessible(true);
+                f.set(instance, (value instanceof String) ? (String)value:(Integer)value);
+
+                }
+                //instance = (T) dest.getConstructors()[0].newInstance(new Object[]{jsonObj});
+        } catch (JSONException | InstantiationException | IllegalAccessException e) {
             e.getMessage();
         }
         return instance;
@@ -40,7 +56,7 @@ public class JsonParser {
     }
 
 
-    /**
+        /**
      *
      * @param src - input data to change in JsonArray
      * @param dest - Class to instantiate a generic T
