@@ -43,6 +43,7 @@ public class JsonParser {
             for (Field f :x){                           // por cada Field da Classe vai verificar se existe o mesmo nome na source
                 Object value = jsonObj.get(f.getName());
 
+
                 f.setAccessible(true);
                 f.set(instance, (value instanceof String) ? (String)value:(Integer)value);
 
@@ -67,10 +68,13 @@ public class JsonParser {
         List<T> returnList =  new ArrayList<T>(); ;
         JSONArray response;
         try {
-             response = new JSONArray(src);
+            response = new JSONArray(src);
 
             for (int i = 0; i < response.length(); i++) {
                 JSONObject jsonObject = response.getJSONObject(i);
+
+                returnList.add( toObject(jsonObject.toString(), dest));
+
                 if (jsonObject.toString().contains("weather")) {
                     String weatherArray = new String(jsonObject.toString());
                     JSONArray weathers = new JSONArray(weatherArray);
