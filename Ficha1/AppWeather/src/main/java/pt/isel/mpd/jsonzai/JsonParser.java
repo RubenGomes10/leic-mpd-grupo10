@@ -1,11 +1,33 @@
 package pt.isel.mpd.jsonzai;
 
+import pt.isel.mpd.Github.GithubRepo;
+import pt.isel.mpd.Strategies.GithubRepoStrategy;
+import pt.isel.mpd.Strategies.IntegerStrategy;
+import pt.isel.mpd.Strategies.StringStrategy;
+import pt.isel.mpd.Strategies.TypeStrategy;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class JsonParser {
 
+    private Map<Class , TypeStrategy> map;
+
+
+    public JsonParser (){
+        map=new HashMap<Class, TypeStrategy>();
+
+        inicializeMap();
+    }
+
+    private void inicializeMap() {
+        map.put(String.class,new StringStrategy());
+        map.put(int.class,new IntegerStrategy());
+        map.put (GithubRepo.class, new GithubRepoStrategy());
+    }
     /**
      *
      * @param src       - Jason code
@@ -28,32 +50,14 @@ public class JsonParser {
 
         for (Field field :fields){
 
+            Class<?> type = field.getType();
             strValue=getValueFromKeyOnSrc(src, field.getName());
-            //System.out.println(field.getName()+"="+s);
-            if (strValue != null) {
 
-                Integer i;
-                if(isStringJustNumeric(strValue)) {
-                    try {
-                        i = Integer.parseInt(strValue);
-                        field.setAccessible(true);
-                        field.set(newT, (int) i);
-                    }
-                    catch (NumberFormatException n){
-                    }
-                }
-                else {field.set(newT, strValue);}
-            }
+            TypeStrategy ts = map.get(type);
+            field.set(newT, ts.method(strValue));
+
         }
         return newT;
-    }
-
-    private boolean isStringJustNumeric(String s) {
-        int i;
-        for (i=0; i<s.length();i++){
-            if (s.charAt(i)<'0'||s.charAt(i)>'9') return false;
-        }
-        return true;
     }
 
     private String getValueFromKeyOnSrc(String src, String fieldName) { // output's the value of the corresponding key if exists
@@ -90,6 +94,11 @@ public class JsonParser {
      * @return returns a list of object`s t
      */
     public <T> List<T> toList(String src, Class<T> dest) {
+        if(dest == null) throw new IllegalArgumentException("no dest");
+        if(src == null) throw new IllegalArgumentException("no src");
+
+        if (src.charAt(0)=='[')
+            
 
         return null;
     }
