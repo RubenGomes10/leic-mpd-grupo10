@@ -2,9 +2,7 @@ package pt.isel.mpd.jsonzai;
 
 import org.junit.Test;
 import pt.isel.mpd.Github.GithubUser;
-import pt.isel.mpd.streamUtils.UrlStreamSupplier;
 
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 
 import static org.junit.Assert.assertEquals;
@@ -24,14 +22,14 @@ public class JsonParserTest {
     @Test
     public void assertObjectIsOk () throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         // Arrange
-        UrlStreamSupplier responseUrl = new UrlStreamSupplier(urlApi+location+format+appKey);
+     /*   UrlStreamSupplier responseUrl = new UrlStreamSupplier(urlApi+location+format+appKey);
         InputStream x = responseUrl.get();
 
 
         String response = "" +x;
-        System.out.println(response);
+        */
 
-        /*String response ="{ \n" +
+        String response ="{ \n" +
                 "login: \"achiu\", \n" +
                 "id   : 24772, \n" +
                 "type: \"User\", \n" +
@@ -47,7 +45,8 @@ public class JsonParserTest {
                 "created_at: \"2008-09-16T03:24:44Z\", \n" +
                 "updated_at: \"2015-03-26T06:29:14Z\" \n" +
                 "}\n";
-                */
+
+        System.out.println(response);
 
         JsonParser parser = new JsonParser();
 

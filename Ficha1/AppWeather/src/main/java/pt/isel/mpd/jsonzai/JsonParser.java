@@ -1,59 +1,84 @@
 package pt.isel.mpd.jsonzai;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import pt.isel.mpd.weather.WeatherDay;
-
 import java.lang.reflect.Field;
-import java.util.ArrayList;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-/**
- * Created by Ruben Gomes on 31/03/2015.
- */
 public class JsonParser {
-
-
 
     /**
      *
-     * @param src - Object weather
-     * @param dest - Class to instantiate a generic T
-     *
-     * @return - returns a new object T using api reflection
-     *
+     * @param src       - Jason code
+     * @param dest      - Destiny Class
+     * @param <T>       - Generic type
+     * @return
      */
+    public <T>T toObject(String src, Class<T> dest) throws  NoSuchMethodException,
+            IllegalAccessException,
+            InvocationTargetException,
+            InstantiationException {
 
-    public <T> T toObject(String src, Class<T> dest) {
-        if(dest == null) throw new IllegalArgumentException("no dest");//no object -> thow exception
-        if(src == null) throw new IllegalArgumentException("no src");//no src -> thow exception
+        if(dest == null) throw new IllegalArgumentException("no dest");
+        if(src == null) throw new IllegalArgumentException("no src");
 
-        JSONObject jsonObj = null;
-        T instance = null;
+        T newT = dest.newInstance();
 
-        try {
-            jsonObj = new JSONObject(src);
-            instance = dest.newInstance();
+        Field[] fields = dest.getDeclaredFields();
+        String strValue=null;
 
+        for (Field field :fields){
 
-            Field[] x = dest.getDeclaredFields(); // TODO: verificar a diferença getFields e getDeclaredFields
-            String s=null;
+            strValue=getValueFromKeyOnSrc(src, field.getName());
+            //System.out.println(field.getName()+"="+s);
+            if (strValue != null) {
 
-            for (Field f :x){                           // por cada Field da Classe vai verificar se existe o mesmo nome na source
-                Object value = jsonObj.get(f.getName());
-
-
-                f.setAccessible(true);
-                f.set(instance, (value instanceof String) ? (String)value:(Integer)value);
-
+                Integer i;
+                if(isStringJustNumeric(strValue)) {
+                    try {
+                        i = Integer.parseInt(strValue);
+                        field.setAccessible(true);
+                        field.set(newT, (int) i);
+                    }
+                    catch (NumberFormatException n){
+                    }
                 }
-                //instance = (T) dest.getConstructors()[0].newInstance(new Object[]{jsonObj});
-        } catch (JSONException | InstantiationException | IllegalAccessException e) {
-            e.getMessage();
+                else {field.set(newT, strValue);}
+            }
         }
-        return instance;
+        return newT;
+    }
 
+    private boolean isStringJustNumeric(String s) {
+        int i;
+        for (i=0; i<s.length();i++){
+            if (s.charAt(i)<'0'||s.charAt(i)>'9') return false;
+        }
+        return true;
+    }
+
+    private String getValueFromKeyOnSrc(String src, String fieldName) { // output's the value of the corresponding key if exists
+        if (fieldName == null)return null;
+
+        src=src.replaceAll("\\s*:", ":");
+        src=src.replaceAll(":\\s*",":");
+
+        int idxTwoPoints;
+        int idxKey=src.indexOf(fieldName+":");
+        String value = "";
+        if (idxKey>0) {
+            src = src.substring(idxKey);
+
+            idxTwoPoints = src.indexOf(":");
+            int idxVirgula = src.indexOf(",");
+            int idxFirst = src.indexOf("\"");
+            int idxSecond = src.indexOf("\"", idxFirst + 1);
+
+            if (src.charAt(idxTwoPoints + 1) == '\"') {
+                value = src.substring(idxFirst + 1, idxSecond);
+            } else
+                value = src.substring(idxTwoPoints + 1, idxVirgula);
+        }
+        return value;
     }
 
 
@@ -65,31 +90,7 @@ public class JsonParser {
      * @return returns a list of object`s t
      */
     public <T> List<T> toList(String src, Class<T> dest) {
-        List<T> returnList =  new ArrayList<T>(); ;
-        JSONArray response;
-        try {
-            response = new JSONArray(src);
 
-            for (int i = 0; i < response.length(); i++) {
-                JSONObject jsonObject = response.getJSONObject(i);
-
-                returnList.add( toObject(jsonObject.toString(), dest));
-
-                if (jsonObject.toString().contains("weather")) {
-                    String weatherArray = new String(jsonObject.toString());
-                    JSONArray weathers = new JSONArray(weatherArray);
-                    for (int j = 0; j < weathers.length(); j++) {
-                        T instance = (T)this.toObject(weathers.getJSONObject(j).toString(),WeatherDay.class);
-                        returnList.add(instance);
-                    }
-                }
-            }
-        } catch (JSONException e){
-            e.getMessage();
-        }
-        return returnList;
+        return null;
     }
-
-
-
 }
