@@ -23,7 +23,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="AppWeather" />
+        <module name="mpd-ficha1-code" />
       </profile>
     </annotationProcessing>
   </component>

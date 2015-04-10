@@ -5,5 +5,5 @@ package pt.isel.mpd.Strategies;
  */
 public interface TypeStrategy <T>{
 
-    T method (String s);
+    T process (String s,Class<?> c);
 }

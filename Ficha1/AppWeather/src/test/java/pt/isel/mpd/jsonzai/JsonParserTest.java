@@ -1,7 +1,7 @@
 package pt.isel.mpd.jsonzai;
 
 import org.junit.Test;
-import pt.isel.mpd.Github.GithubUser;
+import pt.isel.mpd.Github.GitHubUser;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -52,7 +52,7 @@ public class JsonParserTest {
 
         //Act
 
-        GithubUser user = parser.toObject(response, GithubUser.class);
+        GitHubUser user = parser.toObject(response, GitHubUser.class);
 
         //Assert
         assertEquals(user.login,"achiu");

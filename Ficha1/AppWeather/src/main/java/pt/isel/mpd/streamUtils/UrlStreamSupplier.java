@@ -1,17 +1,18 @@
 package pt.isel.mpd.streamUtils;
 
 
+import com.google.common.base.Supplier;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.function.Supplier;
 
 /**
  * Created by Ruben Gomes on 31/03/2015.
  */
-public class UrlStreamSupplier implements Supplier<InputStream>{
+public class UrlStreamSupplier implements Supplier<InputStream> {
 
     private final String url;
 
