@@ -2,9 +2,10 @@ package pt.isel.mpd.jsonzai;
 
 import pt.isel.mpd.Strategies.TypeStrategy;
 import pt.isel.mpd.Strategies.arrays.ArrayStrategy;
-import pt.isel.mpd.Strategies.lists.ListStrategy;
-import pt.isel.mpd.Strategies.objects.ObjectsStrategy;
-import pt.isel.mpd.Strategies.primitives.*;
+import pt.isel.mpd.Strategies.objects.ObjectStrategy;
+import pt.isel.mpd.Strategies.primitives.CharStrategy;
+import pt.isel.mpd.Strategies.primitives.IntegerStrategy;
+import pt.isel.mpd.Strategies.primitives.StringStrategy;
 import pt.isel.mpd.string.StringUtils;
 
 import java.lang.reflect.Field;
@@ -14,32 +15,40 @@ import java.util.Map;
 
 public class JsonParser {
 
-    private Map<Class<?>, TypeStrategy> map;
+    private Map<Class<?>, TypeStrategy> map1;
+            private Map<Character, TypeStrategy> map;
 
-    public int pos = 0;
-
-    public JsonParser() {
-        map = new HashMap<Class<?>, TypeStrategy>();
-
-        inicializeMap();
+    public int getPos() {
+        return pos;
     }
 
-    private void inicializeMap() {
-        map.put(String.class,new StringStrategy());
-        map.put(int.class,new IntegerStrategy());
-        map.put(char.class,new CharStrategy());
-        map.put(ObjectsStrategy.class,new ObjectsStrategy());
-        map.put(ArrayStrategy.class, new ArrayStrategy());
-        map.put(ListStrategy.class, new ListStrategy());
+    public void setPos(int pos) {
+        this.pos = pos;
+    }
+
+    private int pos;
+
+    public JsonParser() {
+
+        map = new HashMap<Character, TypeStrategy>();
+        this.pos = 0;
+        inicializeMap2();
+    }
+
+    private void inicializeMap2() {
+        map.put('"', new StringStrategy());
+        map.put('\'', new CharStrategy());
+        map.put('{', new ObjectStrategy());
+        map.put('[', new ArrayStrategy());
     }
 
     /**
+     * @param <T>  - Generic type
      * @param src  - Jason code
      * @param dest - Destiny Class
-     * @param <T>  - Generic type
      * @return
      */
-    public <T> T toObject(String src, Class<T> dest) throws InstantiationException {
+    public <T> Object toObject(String src, Class<T> dest) throws InstantiationException, IllegalAccessException {
 
         if (dest == null) throw new IllegalArgumentException("no dest");
         if (src == null) throw new IllegalArgumentException("no src");
@@ -53,9 +62,7 @@ public class JsonParser {
             e.printStackTrace();
         }
 
-        parseJson(src,dest,instance);
-
-        return instance;
+        return parseJson(src, instance);
 
     }
 
@@ -71,129 +78,52 @@ public class JsonParser {
         return null;
     }
 
+   public Object  parseJson(String s, Object instance) throws InstantiationException, IllegalAccessException {
 
-
-
-   public String  parseJson(String s,Class<?> c,Object instance) throws InstantiationException {
-       return internalParseJson(s,c,instance);
+       return internalParseJson(s,instance);
    }
 
-    private String internalParseJson(String s,Class<?> c,Object instance) throws InstantiationException {
+    private Object internalParseJson(String jasonStr, Object instance) throws InstantiationException, IllegalAccessException {
+
         char character ;
         if(pos == 0){
-        character = s.charAt(pos++);
+            character = jasonStr.charAt(pos++); // TODO procura o caracter não nulo (removendo os espaços em branco)
         }
         else{
-            if(s.charAt(pos)=='}')
+            if(jasonStr.charAt(pos)=='}')
                 character = '}';
             else
-                character = s.charAt(s.indexOf(":",pos++)+ 2);
+                character = jasonStr.charAt(jasonStr.indexOf(":",pos++)+ 2);
         }
         if(character != '}') {
-            switch (character) {
-                case '[': return processArray(s, c,instance);
-                case '{': return internalParseJson(s, c,instance);
-                case '\'':return processChar(s, c,instance);
-                case '\"': return processString(s, c,instance);
-                case 'f' : return processBoolean(s,c,instance);
-                case 't' : return processBoolean(s,c,instance);
-                default: return processInt(s, c,instance);
+
+            TypeStrategy ts = map.get(character);
+            if (ts== null) ts= new IntegerStrategy();
+
+            String fieldName = StringUtils.parseStringWithoutSpaces(jasonStr, ':', pos);
+
+            // TODO retirar espaços
+            pos+= StringUtils.parseStringLength(jasonStr,':',pos,1);
+            //pos += valueToPutInField.length() +1;
+
+            Field field = null;
+
+            try {
+                field =instance.getClass().getDeclaredField(fieldName);
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
             }
+
+            if (field != null)
+                field.set(instance, ts.process(jasonStr, instance.getClass(), this));
+
+            return internalParseJson(jasonStr,instance);
+
         }
-        return s;
+        return instance;
     }
 
-    private String processBoolean(String s, Class<?> c, Object instance) throws InstantiationException {
-        String fieldName = StringUtils.parseStringWithoutSpaces(s, ':', pos);
 
-        pos+= StringUtils.parseStringLength(s,':',pos,1);
-
-        String valueToPutInField = StringUtils.parseString(s, ',', pos + 1, pos);
-        pos += valueToPutInField.length() +1;
-
-        PrimitiveStrategies<Boolean> primitiveStrategy = new BooleanStrategy();
-
-        boolean value = primitiveStrategy.process(valueToPutInField,c);
-
-        Field field = getField(c,fieldName);
-        if (field != null) {
-           setField(field,instance,value);
-        }
-        return internalParseJson(s,c,instance);
-    }
-
-    private String processInt(String s, Class<?> c, Object instance) throws InstantiationException {
-        String fieldName = StringUtils.parseStringWithoutSpaces(s, ':', pos);
-        pos+= StringUtils.parseStringLength(s, ':', pos, 1);
-
-        String valueToPutInField = StringUtils.parseString(s, ',', pos + 1, pos);
-        pos += valueToPutInField.length() +1;
-
-        PrimitiveStrategies<Integer> primitiveInteger = new IntegerStrategy();
-        int value = primitiveInteger.process(valueToPutInField,c);
-
-        Field field = getField(c,fieldName);
-
-        if (field != null) {
-            setField(field,instance,value);
-        }
-        return internalParseJson(s,c,instance);
-    }
-
-    private String processString(String s, Class<?> c, Object instance) throws InstantiationException {
-        String fieldName = StringUtils.parseStringWithoutSpaces(s, ':', pos);
-        pos+= StringUtils.parseStringLength(s,':',pos,1);
-
-        int firstDoubleQuote = StringUtils.getIndexCharacter(s,'\"',pos);
-        int secondDoubleQuote = StringUtils.getIndexCharacter(s,'\"',firstDoubleQuote+1);
-
-        String valueToPutinField = StringUtils.parseString(s, firstDoubleQuote + 1, secondDoubleQuote);
-
-        pos += StringUtils.parseStringLength(s,pos,firstDoubleQuote) +
-                StringUtils.parseStringLength(s,firstDoubleQuote,secondDoubleQuote);
-
-        char endOfObject = s.charAt(pos+3);
-        if( endOfObject != '}')
-            pos += StringUtils.parseStringLength(s,',',secondDoubleQuote,0);
-        else
-            pos += 3;
-
-        PrimitiveStrategies<String> stringPrimitive = new StringStrategy();
-        String value = stringPrimitive.process(valueToPutinField,c);
-
-        Field field = getField(c,fieldName);
-        if(field != null) {
-            setField(field,instance,value);
-        }
-        return internalParseJson(s,c,instance) ;
-    }
-
-    private String processChar(String s, Class<?> c, Object instance) {
-        return null;
-    }
-
-    private String processArray(String s, Class<?> c, Object instance) {
-        return null;
-    }
-
-    private Field getField(Class<?> c, String fieldName) {
-        Field field = null;
-
-        try {
-            field = c.getDeclaredField(fieldName);
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
-        return field;
-    }
-
-    private void setField(Field field, Object instance, Object value) {
-        try {
-            field.set(instance,value);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-    }
 
 
 }
