@@ -5,10 +5,7 @@ import pt.isel.mpd.Strategies.arrays.ArrayStrategy;
 import pt.isel.mpd.Strategies.objects.ObjectStrategy;
 import pt.isel.mpd.Strategies.primitives.BooleanStrategy;
 import pt.isel.mpd.Strategies.primitives.CharStrategy;
-import pt.isel.mpd.Strategies.primitives.IntegerStrategy;
 import pt.isel.mpd.Strategies.primitives.StringStrategy;
-import pt.isel.mpd.consumers.SpaceConsumer;
-import pt.isel.mpd.parseUtils.ParseUtils;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -17,24 +14,24 @@ import java.util.Map;
 
 public class JsonParser {
 
+    private int pos;
     private Map<Class<?>, TypeStrategy> map1;
             private Map<Character, TypeStrategy> map;
+    private boolean firstObject;
 
     public int getPos() {
         return pos;
     }
-
     public void setPos(int pos) {
         this.pos = pos;
     }
-
-    private int pos;
 
     public JsonParser() {
 
         map = new HashMap<Character, TypeStrategy>();
         this.pos = 0;
         initializeMap();
+        firstObject=true;
     }
 
     private void initializeMap() {
@@ -65,9 +62,7 @@ public class JsonParser {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-
-        return parseJson(src, instance);
-
+        return parseJsonToObject(src, instance);
     }
 
     /**
@@ -82,74 +77,65 @@ public class JsonParser {
         return null;
     }
 
-   public <T>T  parseJson(String s, T instance) throws InstantiationException, IllegalAccessException {
+   public <T>T parseJsonToObject(String s, T instance) throws InstantiationException, IllegalAccessException {
 
        return internalParseJson(s,instance);
    }
 
-    private <T> T internalParseJson(String jasonStr, T instance) throws InstantiationException, IllegalAccessException{
+    private <T> T internalParseJson(String jasonStr, T instance) throws InstantiationException, IllegalAccessException {
 
-        char character ;
-        if(pos == 0){
-            consume(jasonStr,this::consumeSpacesAndComma);
-            character = jasonStr.charAt(pos++);
-            if(character == '[' || character == '{'){
-                this.consume(jasonStr,this::consumeSpacesAndComma);
-                return internalParseJson(jasonStr,instance);
+        char jsontType = getNextJasonType(jasonStr);
+        TypeStrategy ts = map.get(jsontType);
+        String valueOfJasonKey = "",
+                jasonFieldKey = "";
+
+        if (ts instanceof StringStrategy) {                 // se apanhou uma chave vai preenche-la!
+            jasonFieldKey = getJasonFieldKey(jasonStr);     // no final o ponteiro deve estar depois dos dois pontos
+            Field field = getField(jasonFieldKey, instance);
+
+            if (field != null) {
+                field.set(instance, ts.process(jasonStr, instance.getClass(), this));
+            } else {
+                atualizaPosicao();      // TODO Falta implementar o método
             }
         }
-        else{
-            if(jasonStr.charAt(pos)=='}')
-                character = '}';
-            else {
-                character = jasonStr.charAt(jasonStr.indexOf(":", pos++) + 2);
-                if(character == '{') {
-                    consume(jasonStr, this::consumeSpacesAndComma);
-                    return internalParseJson(jasonStr, instance);
+        if (ts instanceof ObjectStrategy){
+                if (firstObject = true) {
+                    firstObject = false;
+                    pos++;
+                    internalParseJson(jasonStr, instance);
                 }
             }
-        }
-        if(character != '}') {
-
-            TypeStrategy ts = map.get(character);
-            if (ts== null) ts= new IntegerStrategy();
-
-            this.consume(jasonStr,this::consumeSpacesAndComma);
-            String fieldName = ParseUtils.parseStringWithoutSpaces(jasonStr, ':',pos-1);
-            pos+= fieldName.length()+1;
-            this.consume(jasonStr,this::consumeSpacesAndComma);
-
-            Field field = getField(fieldName,instance);
-
-            if (field != null)
-                field.set(instance, ts.process(jasonStr, instance.getClass(), this));
-            else{
-                if(character == '\"')
-                    pos+=ParseUtils.parseString(jasonStr,'\"',pos+1,pos+1).length() +2;
-                else
-                    pos+=ParseUtils.parseString(jasonStr,',',pos,pos).length();
-            }
-
-            this.consume(jasonStr,this::consumeSpacesAndComma);
-            return internalParseJson(jasonStr,instance);
+        if (ts instanceof ArrayStrategy){
 
         }
+        if (finishedObject(jasonStr.substring(pos))) return instance;
+        else internalParseJson(jasonStr, instance);
+
         return instance;
     }
 
-    public void consumeSpacesAndComma(String strJson) {
 
-        int currentPos = this.getPos();
-        char character= strJson.charAt(currentPos);
-        while(character == ' ' || character == '\n' || character == ',' || character == ':'){
-           character = strJson.charAt(++currentPos);
-        }
-        this.setPos(currentPos);
+    private boolean finishedObject(String substring) {         // TODO IMPLEMENTAR O MÉTODO
+        return false;
     }
 
+    private String getJasonFieldKey(String str) {
+        int auxPos=pos;
+        while (str.charAt(auxPos) != '\"') {
+            auxPos++;
+        }
+        return str.substring(pos,auxPos);
+    }
 
-    public void consume(String strJson,SpaceConsumer consumer){
-        consumer.accept(strJson);
+    private char getNextJasonType(String s) {
+               while ( s.charAt(pos) != '{' ||
+                       s.charAt(pos) != '[' ||
+                       s.charAt(pos) != '"') {
+                   pos++;
+               }
+        return
+                s.charAt(pos);
     }
 
 
