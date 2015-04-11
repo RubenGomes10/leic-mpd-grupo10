@@ -52,7 +52,7 @@ public class JsonParserTest {
 
         //Act
 
-        GitHubUser user = parser.toObject(response, GitHubUser.class);
+        GitHubUser user = parser.<GitHubUser>toObject(response, GitHubUser.class);
 
         //Assert
         assertEquals(user.login,"achiu");

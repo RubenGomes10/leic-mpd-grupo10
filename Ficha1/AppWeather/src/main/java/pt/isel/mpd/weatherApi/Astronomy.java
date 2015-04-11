@@ -1,11 +1,11 @@
-package pt.isel.mpd.weather;
+package pt.isel.mpd.weatherApi;
 
 /**
  * Created by Ruben Gomes on 31/03/2015.
  */
 public class Astronomy {
 
-    private String moonRise,
+    public String moonRise,
             moonSet,
             sunRise,
             sunSet;

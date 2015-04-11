@@ -6,15 +6,19 @@ import pt.isel.mpd.jsonzai.JsonParser;
 /**
  * Created by HS on 10/04/2015.
  */
-public class ObjectStrategy implements TypeStrategy{
+    public class ObjectStrategy<T> implements TypeStrategy{
 
     @Override
-    public Object process(String s, Class c, JsonParser jsonParser) {
+    public T process(String s, Class c, JsonParser jsonParser)  {
         try {
-            return jsonParser.toObject(s,c);
+            return (T) jsonParser.toObject(s,c);
         } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
         return null;
     }
+
+
 }

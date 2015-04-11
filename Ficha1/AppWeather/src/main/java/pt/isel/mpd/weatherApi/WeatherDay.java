@@ -1,4 +1,4 @@
-package pt.isel.mpd.weather;
+package pt.isel.mpd.weatherApi;
 
 import java.text.DateFormat;
 
@@ -11,11 +11,11 @@ import java.util.Locale;
  */
 public class WeatherDay {
 
-    private Astronomy day_astronomy;
+    public Astronomy day_astronomy;
 
-    private Date date;
+    public Date date;
 
-    private int maxTempC,
+    public int maxTempC,
             maxTempF,
             minTempC,
             minTempF;
