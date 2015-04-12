@@ -3,7 +3,10 @@ package pt.isel.mpd.jsonzai;
 import org.junit.Test;
 import pt.isel.mpd.Github.GitHubRepo;
 import pt.isel.mpd.Github.GitHubUser;
+import pt.isel.mpd.streamUtils.IOUtils;
+import pt.isel.mpd.streamUtils.UrlStreamSupplier;
 
+import java.io.BufferedInputStream;
 import java.lang.reflect.InvocationTargetException;
 
 import static org.junit.Assert.assertEquals;
@@ -21,16 +24,13 @@ public class JsonParserTest {
     public void assertObjectIsOk () throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         // Arrange
 
+        //String response ="{\"login\": \"achiu\",\"id\":24772,\"avatar_url\":\"https://avatars.githubusercontent.com/u/24772?v=3\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/achiu\",\"html_url\":\"https://github.com/achiu\",\"followers_url\":\"https://api.github.com/users/achiu/followers\",\"following_url\":\"https://api.github.com/users/achiu/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/achiu/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/achiu/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/achiu/subscriptions\",\"organizations_url\":\"https://api.github.com/users/achiu/orgs\",\"repos_url\":\"https://api.github.com/users/achiu/repos\",\"events_url\":\"https://api.github.com/users/achiu/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/achiu/received_events\",\"type\":\"User\",\"site_admin\":true,\"name\":\"Arthur Chiu\",\"company\":\"GitHub\",\"blog\":\"\",\"location\":\"San Francisco, CA\",\"email\":\"achiu@github.com\",\"hireable\":false,\"bio\":null,\"public_repos\":51,\"public_gists\":37,\"followers\":200,\"following\":38,\"created_at\":\"2008-09-16T03:24:44Z\",\"updated_at\":\"2015-04-11T05:39:05Z\"}";
 
-        String response ="{\"login\": \"achiu\",\"id\":24772,\"avatar_url\":\"https://avatars.githubusercontent.com/u/24772?v=3\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/achiu\",\"html_url\":\"https://github.com/achiu\",\"followers_url\":\"https://api.github.com/users/achiu/followers\",\"following_url\":\"https://api.github.com/users/achiu/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/achiu/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/achiu/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/achiu/subscriptions\",\"organizations_url\":\"https://api.github.com/users/achiu/orgs\",\"repos_url\":\"https://api.github.com/users/achiu/repos\",\"events_url\":\"https://api.github.com/users/achiu/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/achiu/received_events\",\"type\":\"User\",\"site_admin\":true,\"name\":\"Arthur Chiu\",\"company\":\"GitHub\",\"blog\":\"\",\"location\":\"San Francisco, CA\",\"email\":\"achiu@github.com\",\"hireable\":false,\"bio\":null,\"public_repos\":51,\"public_gists\":37,\"followers\":200,\"following\":38,\"created_at\":\"2008-09-16T03:24:44Z\",\"updated_at\":\"2015-04-11T05:39:05Z\"}";
-
-       // UrlStreamSupplier responseUrl = new UrlStreamSupplier("https://api.github.com/users/achiu");
-       // BufferedReader reader = new BufferedReader(new InputStreamReader(responseUrl.get()));
-
-       // String response = IOUtils.getStringReader(reader);
+        //já está funcional a ir buscar um objecto à net!!
+        UrlStreamSupplier responseUrl = new UrlStreamSupplier("https://api.github.com/users/achiu");
+        BufferedInputStream reader = new BufferedInputStream(responseUrl.get());
+        String response = IOUtils.getStringFromInputStream(reader);
         JsonParser parser = new JsonParser();
-
-        System.out.println(response);
 
         //Act
 
@@ -75,6 +75,11 @@ public class JsonParserTest {
                 "    }\n" +
                 "}";
 
+        /* Para este resultar falta implementar o caso de ArrayStrategy
+        UrlStreamSupplier responseUrl = new UrlStreamSupplier("https://api.github.com/users/achiu/repos");
+        BufferedInputStream reader = new BufferedInputStream(responseUrl.get());
+        String response = IOUtils.getStringFromInputStream(reader);
+        */
         JsonParser parser = new JsonParser();
 
         GitHubRepo repo = parser.<GitHubRepo>toObject(response, GitHubRepo.class);

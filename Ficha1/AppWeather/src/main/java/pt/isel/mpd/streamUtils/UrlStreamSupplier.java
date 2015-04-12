@@ -1,5 +1,7 @@
 package pt.isel.mpd.streamUtils;
 
+import com.google.common.io.ByteStreams;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,7 +23,7 @@ public class UrlStreamSupplier implements Supplier<InputStream> {
     @Override
     public InputStream get() {
         HttpURLConnection urlConnection = null;
-        InputStream inputStreamConnection = null;
+        InputStream connInputStream = null;
 
         try {
             URL uri = new URL(this.url);
@@ -32,20 +34,22 @@ public class UrlStreamSupplier implements Supplier<InputStream> {
                 return null;
             }
             int size = urlConnection.getContentLength();
-            byte[]data = new byte[size];
+            System.out.printf("%d bytes available\n", size);
 
-            inputStreamConnection = urlConnection.getInputStream();
-            int read = inputStreamConnection.read(data);
-            return new ByteArrayInputStream(data) ;
+            connInputStream = urlConnection.getInputStream();
+            // int read = connInputStream.read(data);
+            byte[] data = ByteStreams.toByteArray(connInputStream); // byteStream is the solution!!
+            System.out.printf("Read %d bytes\n", data.length);
+            return new ByteArrayInputStream(data);
 
 
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }finally {
-            if(inputStreamConnection != null){
+            if(connInputStream != null){
                 try {
-                    inputStreamConnection.close();
+                    connInputStream.close();
                 } catch (IOException e) {
 
                 }

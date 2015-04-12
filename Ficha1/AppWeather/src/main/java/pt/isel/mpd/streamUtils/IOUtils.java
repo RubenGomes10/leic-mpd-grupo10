@@ -1,6 +1,6 @@
 package pt.isel.mpd.streamUtils;
 
-import java.io.BufferedReader;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 
 /**
@@ -8,14 +8,13 @@ import java.io.IOException;
  */
 public class IOUtils {
 
-    public static String getStringReader(BufferedReader rd){
+    public static String getStringFromInputStream(BufferedInputStream rd){
         StringBuilder sb = new StringBuilder();
-        String line;
+        int c;
 
         try {
-            while((line = rd.readLine()) != null){
-             sb.append(line);
-             //System.out.println(line);
+            while((c = rd.read()) != -1){
+             sb.append((char)c);
             }
         } catch (IOException e) {
             e.printStackTrace();
