@@ -53,5 +53,9 @@ hs_err_pid*
 
 
 # Intelij
-.idea/
+
 *.iml
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+/build
