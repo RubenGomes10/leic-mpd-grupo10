@@ -5,6 +5,7 @@ import pt.isel.mpd.Strategies.arrays.ArrayStrategy;
 import pt.isel.mpd.Strategies.objects.ObjectStrategy;
 import pt.isel.mpd.Strategies.primitives.BooleanStrategy;
 import pt.isel.mpd.Strategies.primitives.CharStrategy;
+import pt.isel.mpd.Strategies.primitives.IntegerStrategy;
 import pt.isel.mpd.Strategies.primitives.StringStrategy;
 
 import java.lang.reflect.Field;
@@ -41,6 +42,16 @@ public class JsonParser {
         map.put('[', new ArrayStrategy());
         map.put('f',new BooleanStrategy());
         map.put('t',new BooleanStrategy());
+        map.put('0',new IntegerStrategy());
+        map.put('1',new IntegerStrategy());
+        map.put('2',new IntegerStrategy());
+        map.put('3',new IntegerStrategy());
+        map.put('4',new IntegerStrategy());
+        map.put('5',new IntegerStrategy());
+        map.put('6',new IntegerStrategy());
+        map.put('7',new IntegerStrategy());
+        map.put('8',new IntegerStrategy());
+        map.put('9',new IntegerStrategy());
     }
 
     /**
@@ -86,17 +97,20 @@ public class JsonParser {
 
         char jsontType = getNextJasonType(jasonStr);
         TypeStrategy ts = map.get(jsontType);
-        String valueOfJasonKey = "",
-                jasonFieldKey = "";
+
+        String jasonFieldKey = "";
 
         if (ts instanceof StringStrategy) {                 // se apanhou uma chave vai preenche-la!
-            jasonFieldKey = getJasonFieldKey(jasonStr);     // no final o ponteiro deve estar depois dos dois pontos
+            jasonFieldKey = getNextJasonFieldKey(jasonStr);     // no final o ponteiro deve estar depois dos dois pontos
             Field field = getField(jasonFieldKey, instance);
+
+            char nextType = getNextType(jasonStr);
+            ts = map.get(nextType);
 
             if (field != null) {
                 field.set(instance, ts.process(jasonStr, instance.getClass(), this));
             } else {
-                atualizaPosicao();      // TODO Falta implementar o método
+                ts.process(jasonStr, instance.getClass(), this);
             }
         }
         if (ts instanceof ObjectStrategy){
@@ -109,29 +123,75 @@ public class JsonParser {
         if (ts instanceof ArrayStrategy){
 
         }
-        if (finishedObject(jasonStr.substring(pos))) return instance;
+        if (finishedObject(jasonStr)) return instance;
         else internalParseJson(jasonStr, instance);
 
         return instance;
     }
 
-
-    private boolean finishedObject(String substring) {         // TODO IMPLEMENTAR O MÉTODO
-        return false;
+    private char getNextType(String jasonStr) {
+        while ( jasonStr.charAt(pos) != '{' &&
+                jasonStr.charAt(pos) != '[' &&
+                jasonStr.charAt(pos) != '"' &&
+                jasonStr.charAt(pos) != '\'' &&
+                jasonStr.charAt(pos) != 'f'&&
+                jasonStr.charAt(pos) != 't'&&
+                jasonStr.charAt(pos) != '0'&&
+                jasonStr.charAt(pos) != '1'&&
+                jasonStr.charAt(pos) != '2'&&
+                jasonStr.charAt(pos) != '3'&&
+                jasonStr.charAt(pos) != '4'&&
+                jasonStr.charAt(pos) != '5'&&
+                jasonStr.charAt(pos) != '6'&&
+                jasonStr.charAt(pos) != '7'&&
+                jasonStr.charAt(pos) != '8'&&
+                jasonStr.charAt(pos) != '9'
+                ) {
+            pos++;
+        }
+        return
+                jasonStr.charAt(pos);
     }
 
-    private String getJasonFieldKey(String str) {
-        int auxPos=pos;
-        while (str.charAt(auxPos) != '\"') {
-            auxPos++;
+
+    private boolean finishedObject(String substring) {         // TODO IMPLEMENTAR O MÉTODO
+        char c = getNextCloseJasonObject(substring);
+        if (c == '}') return  true;
+        else return false;
+    }
+
+    private char getNextCloseJasonObject(String substring) {
+
+        char c = substring.charAt(pos);
+        while ( c !=']'&&
+                c !=','&&
+                c !='}') {
+            pos++;
+            c = substring.charAt(pos);
         }
-        return str.substring(pos,auxPos);
+        return c;
+    }
+
+    private String getNextJasonFieldKey(String str) {
+        int auxPos1=pos,auxPos2;
+
+        while (str.charAt(auxPos1) != '\"') { //Find first quotes
+            auxPos1++;
+        }
+        auxPos2=auxPos1+1;
+        while (str.charAt(auxPos2) != '\"') { //Find second quotes
+            auxPos2++;
+        }
+        pos=auxPos2+1;
+        return str.substring(auxPos1+1,auxPos2);
     }
 
     private char getNextJasonType(String s) {
-               while ( s.charAt(pos) != '{' ||
-                       s.charAt(pos) != '[' ||
-                       s.charAt(pos) != '"') {
+               while ( s.charAt(pos) != '{' &&
+                       s.charAt(pos) != '[' &&
+                       s.charAt(pos) != '"'
+                       ) {
+                   System.out.println(s.charAt(pos));
                    pos++;
                }
         return

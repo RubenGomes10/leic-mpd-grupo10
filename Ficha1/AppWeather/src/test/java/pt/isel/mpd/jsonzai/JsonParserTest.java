@@ -7,9 +7,6 @@ import java.lang.reflect.InvocationTargetException;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created by Ruben Gomes on 31/03/2015.
- */
 public class JsonParserTest {
 
     String appKey = "&key=bc7c2e7a68a6f65cab1533b2c9ce9";
@@ -31,10 +28,6 @@ public class JsonParserTest {
 
         String response ="{\"login\":\"achiu\",\"id\":24772,\"avatar_url\":\"https://avatars.githubusercontent.com/u/24772?v=3\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/achiu\",\"html_url\":\"https://github.com/achiu\",\"followers_url\":\"https://api.github.com/users/achiu/followers\",\"following_url\":\"https://api.github.com/users/achiu/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/achiu/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/achiu/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/achiu/subscriptions\",\"organizations_url\":\"https://api.github.com/users/achiu/orgs\",\"repos_url\":\"https://api.github.com/users/achiu/repos\",\"events_url\":\"https://api.github.com/users/achiu/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/achiu/received_events\",\"type\":\"User\",\"site_admin\":true,\"name\":\"Arthur Chiu\",\"company\":\"GitHub\",\"blog\":\"\",\"location\":\"San Francisco, CA\",\"email\":\"achiu@github.com\",\"hireable\":false,\"bio\":null,\"public_repos\":51,\"public_gists\":37,\"followers\":200,\"following\":38,\"created_at\":\"2008-09-16T03:24:44Z\",\"updated_at\":\"2015-04-11T05:39:05Z\"}";
 
-
-
-        System.out.println(response);
-
         JsonParser parser = new JsonParser();
 
         //Act
@@ -47,7 +40,5 @@ public class JsonParserTest {
         assertEquals(user.email,"achiu@github.com");
         assertEquals(user.location,"San Francisco, CA");
     }
-
-
 
 }
