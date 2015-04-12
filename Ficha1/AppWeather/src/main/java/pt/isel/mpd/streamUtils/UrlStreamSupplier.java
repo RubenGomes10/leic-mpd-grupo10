@@ -36,7 +36,8 @@ public class UrlStreamSupplier implements Supplier<InputStream> {
 
             inputStreamConnection = urlConnection.getInputStream();
             int read = inputStreamConnection.read(data);
-            return new ByteArrayInputStream(data);
+            return new ByteArrayInputStream(data) ;
+
 
         } catch (IOException e) {
             e.printStackTrace();

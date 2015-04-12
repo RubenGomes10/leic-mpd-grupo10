@@ -69,9 +69,9 @@ public class JsonParser {
         try {
             instance = dest.newInstance();
         } catch (InstantiationException e) {
-            e.printStackTrace();
+           // e.printStackTrace();
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+           // e.printStackTrace();
         }
         return parseJsonToObject(src, instance);
     }
@@ -108,18 +108,20 @@ public class JsonParser {
             ts = map.get(nextType);
 
             if (field != null) {
-                field.set(instance, ts.process(jasonStr, instance.getClass(), this));
+                field.set(instance, ts.process(jasonStr, field.getType(), this));
             } else {
                 ts.process(jasonStr, instance.getClass(), this);
             }
+
         }
         if (ts instanceof ObjectStrategy){
-                if (firstObject = true) {
-                    firstObject = false;
-                    pos++;
-                    internalParseJson(jasonStr, instance);
-                }
+            if (firstObject == true) {
+                firstObject = false;
+                pos++;
+                internalParseJson(jasonStr, instance);
             }
+        }
+
         if (ts instanceof ArrayStrategy){
 
         }
@@ -130,31 +132,18 @@ public class JsonParser {
     }
 
     private char getNextType(String jasonStr) {
-        while ( jasonStr.charAt(pos) != '{' &&
-                jasonStr.charAt(pos) != '[' &&
-                jasonStr.charAt(pos) != '"' &&
-                jasonStr.charAt(pos) != '\'' &&
-                jasonStr.charAt(pos) != 'f'&&
-                jasonStr.charAt(pos) != 't'&&
-                jasonStr.charAt(pos) != '0'&&
-                jasonStr.charAt(pos) != '1'&&
-                jasonStr.charAt(pos) != '2'&&
-                jasonStr.charAt(pos) != '3'&&
-                jasonStr.charAt(pos) != '4'&&
-                jasonStr.charAt(pos) != '5'&&
-                jasonStr.charAt(pos) != '6'&&
-                jasonStr.charAt(pos) != '7'&&
-                jasonStr.charAt(pos) != '8'&&
-                jasonStr.charAt(pos) != '9'
-                ) {
-            pos++;
+        char character = jasonStr.charAt(this.pos);
+        while ( character != '{' && character != '[' &&
+                character != '"' && character != '\''&&
+                character != 'f' && character != 't' &&
+                !(character>='0' && character <='9')){
+            character = jasonStr.charAt(++pos);
         }
-        return
-                jasonStr.charAt(pos);
+        return jasonStr.charAt(pos);
     }
 
 
-    private boolean finishedObject(String substring) {         // TODO IMPLEMENTAR O MÉTODO
+    private boolean finishedObject(String substring) {
         char c = getNextCloseJasonObject(substring);
         if (c == '}') return  true;
         else return false;
@@ -187,15 +176,13 @@ public class JsonParser {
     }
 
     private char getNextJasonType(String s) {
-               while ( s.charAt(pos) != '{' &&
-                       s.charAt(pos) != '[' &&
-                       s.charAt(pos) != '"'
-                       ) {
-                   System.out.println(s.charAt(pos));
-                   pos++;
-               }
-        return
-                s.charAt(pos);
+
+        while ( s.charAt(pos) != '{' &&
+                s.charAt(pos) != '[' &&
+                s.charAt(pos) != '"') {
+            pos++;
+        }
+        return s.charAt(pos);
     }
 
 
@@ -205,7 +192,7 @@ public class JsonParser {
         try {
             field =  instance.getClass().getDeclaredField(fieldName);
         } catch (NoSuchFieldException e) {
-            e.printStackTrace();
+           // e.printStackTrace();
         }
         return field;
     }

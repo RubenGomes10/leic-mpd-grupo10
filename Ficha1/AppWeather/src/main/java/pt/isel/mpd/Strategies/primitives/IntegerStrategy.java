@@ -20,12 +20,13 @@ public class IntegerStrategy extends PrimitiveStrategies<Integer> {
         while (isValid(character,(Character c) -> c >= '0' && c<='9')){
             character = s.charAt(++lastNumberPos);
         }
-        jsonParser.setPos(++lastNumberPos);
+        jsonParser.setPos(lastNumberPos);
 
         try {
-            i = Integer.parseInt(s.substring(pos,lastNumberPos-1));
+            i = Integer.parseInt(s.substring(pos,lastNumberPos));
         }
         catch (NumberFormatException n){
+            n.printStackTrace();
         }
 
         return (int)i;

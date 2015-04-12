@@ -3,9 +3,9 @@ package pt.isel.mpd.Github;
 /**
  * Created by HS on 07/04/2015.
  */
-public class GithubRepo {
-    String id;
-    String name;
-    String fullName;
-    GithubUser owner;
+public class GitHubRepo {
+    public int id;
+    public String name;
+    public String full_name; // 1 erro estava fullName em vez de full_name
+    public GitHubUser owner;
 }
