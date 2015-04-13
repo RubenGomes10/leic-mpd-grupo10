@@ -56,4 +56,5 @@ hs_err_pid*
 *.iml
 .idea
 .idea/workspace.xml
+/AppWeather/.idea/workspace.xml
 /build
