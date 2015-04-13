@@ -1,7 +1,7 @@
 package pt.isel.mpd.jsonzai;
 
 import pt.isel.mpd.Strategies.TypeStrategy;
-import pt.isel.mpd.Strategies.arrays.ArrayStrategy;
+import pt.isel.mpd.Strategies.lists.ListStrategy;
 import pt.isel.mpd.Strategies.objects.ObjectStrategy;
 import pt.isel.mpd.Strategies.primitives.BooleanStrategy;
 import pt.isel.mpd.Strategies.primitives.CharStrategy;
@@ -10,15 +10,23 @@ import pt.isel.mpd.Strategies.primitives.StringStrategy;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 public class JsonParser {
 
+
+    //Falta implementar os tokens que o engenheiro quer! ;) o resto ja mudei e ja verifiquei nos testes e esta funcional!!
+
     private int pos;
-    private Map<Class<?>, TypeStrategy> map1;
-            private Map<Character, TypeStrategy> map;
-    private boolean firstObject;
+    private Map<Character, TypeStrategy> map;
+
+    public JsonParser() {
+        map = new HashMap<>();
+        this.pos = 0;
+        initializeMap();
+    }
 
     public int getPos() {
         return pos;
@@ -27,19 +35,11 @@ public class JsonParser {
         this.pos = pos;
     }
 
-    public JsonParser() {
-
-        map = new HashMap<Character, TypeStrategy>();
-        this.pos = 0;
-        initializeMap();
-        firstObject=true;
-    }
-
     private void initializeMap() {
         map.put('\"', new StringStrategy());
         map.put('\'', new CharStrategy());
         map.put('{', new ObjectStrategy());
-        map.put('[', new ArrayStrategy());
+        map.put('[', new ListStrategy());
         map.put('f',new BooleanStrategy());
         map.put('t',new BooleanStrategy());
         map.put('0',new IntegerStrategy());
@@ -85,46 +85,43 @@ public class JsonParser {
     public <T> List<T> toList(String src, Class<T> dest) {
         if (dest == null) throw new IllegalArgumentException("no dest");
         if (src == null) throw new IllegalArgumentException("no src");
-        return null;
+
+        List<T> returnList = new LinkedList<>();
+
+        while(src.charAt(this.pos) != ']'){
+            try {
+                returnList.add(this.toObject(src,dest));
+            } catch (InstantiationException e) {
+                //e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                //e.printStackTrace();
+            }
+        }
+        return returnList;
     }
 
    public <T>T parseJsonToObject(String s, T instance) throws InstantiationException, IllegalAccessException {
-
+       ++pos;
        return internalParseJson(s,instance);
    }
 
     private <T> T internalParseJson(String jasonStr, T instance) throws InstantiationException, IllegalAccessException {
 
-        char jsontType = getNextJasonType(jasonStr);
-        TypeStrategy ts = map.get(jsontType);
+        char jsonType = getNextJasonType(jasonStr); // isto passa a ser token acho
+        TypeStrategy ts ;
 
-        String jasonFieldKey = "";
+        String jasonFieldKey = getNextJasonFieldKey(jasonStr);     // no final o ponteiro deve estar depois dos dois pontos
+        Field field = getField(jasonFieldKey,instance.getClass());
 
-        if (ts instanceof StringStrategy) {                 // se apanhou uma chave vai preenche-la!
-            jasonFieldKey = getNextJasonFieldKey(jasonStr);     // no final o ponteiro deve estar depois dos dois pontos
-            Field field = getField(jasonFieldKey, instance);
-
-            char nextType = getNextType(jasonStr);
-            ts = map.get(nextType);
+            char nextType = getNextType(jasonStr); // isto também
+            ts = this.map.get(nextType);
 
             if (field != null) {
-                field.set(instance, ts.process(jasonStr, field.getType(), this));
+                field.set(instance, ts.process(jasonStr,field, this));
             } else {
-                ts.process(jasonStr, instance.getClass(), this);
+                ts.process(jasonStr,field, this);
             }
 
-        }
-        if (ts instanceof ObjectStrategy){
-            if (firstObject == true) {
-                firstObject = false;
-                pos++;
-                internalParseJson(jasonStr, instance);
-            }
-        }
-
-        if (ts instanceof ArrayStrategy){
-
-        }
         if (finishedObject(jasonStr)) return instance;
         else internalParseJson(jasonStr, instance);
 
@@ -186,11 +183,11 @@ public class JsonParser {
     }
 
 
-    private Field getField(String fieldName,Object instance) {
+    private Field getField(String fieldName,Class<?> instance) {
        Field field = null;
 
         try {
-            field =  instance.getClass().getDeclaredField(fieldName);
+            field =  instance.getDeclaredField(fieldName);
         } catch (NoSuchFieldException e) {
            // e.printStackTrace();
         }

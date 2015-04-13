@@ -8,6 +8,7 @@ import pt.isel.mpd.streamUtils.UrlStreamSupplier;
 
 import java.io.BufferedInputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -24,9 +25,6 @@ public class JsonParserTest {
     public void assertObjectIsOk () throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         // Arrange
 
-        //String response ="{\"login\": \"achiu\",\"id\":24772,\"avatar_url\":\"https://avatars.githubusercontent.com/u/24772?v=3\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/achiu\",\"html_url\":\"https://github.com/achiu\",\"followers_url\":\"https://api.github.com/users/achiu/followers\",\"following_url\":\"https://api.github.com/users/achiu/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/achiu/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/achiu/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/achiu/subscriptions\",\"organizations_url\":\"https://api.github.com/users/achiu/orgs\",\"repos_url\":\"https://api.github.com/users/achiu/repos\",\"events_url\":\"https://api.github.com/users/achiu/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/achiu/received_events\",\"type\":\"User\",\"site_admin\":true,\"name\":\"Arthur Chiu\",\"company\":\"GitHub\",\"blog\":\"\",\"location\":\"San Francisco, CA\",\"email\":\"achiu@github.com\",\"hireable\":false,\"bio\":null,\"public_repos\":51,\"public_gists\":37,\"followers\":200,\"following\":38,\"created_at\":\"2008-09-16T03:24:44Z\",\"updated_at\":\"2015-04-11T05:39:05Z\"}";
-
-        //já está funcional a ir buscar um objecto à net!!
         UrlStreamSupplier responseUrl = new UrlStreamSupplier("https://api.github.com/users/achiu");
         BufferedInputStream reader = new BufferedInputStream(responseUrl.get());
         String response = IOUtils.getStringFromInputStream(reader);
@@ -46,9 +44,7 @@ public class JsonParserTest {
 
     @Test
     public void assertMultipleObjectIsOk() throws IllegalAccessException, InstantiationException {
-
-        //3 erro dava null pois nesta string nao reparamos que faltava o email e location ao user; já acrescentei!!
-        String response = "{\n" +
+       /* String response = "{\n" +
                 "    \"id\": 12345,\n" +
                 "    \"name\": \"achiu.github.com\",\n" +
                 "    \"full_name\": \"achiu/achiu.github.com\",\n" +
@@ -74,26 +70,27 @@ public class JsonParserTest {
                 "      \"site_admin\": true\n" +
                 "    }\n" +
                 "}";
-
-        /* Para este resultar falta implementar o caso de ArrayStrategy
+*/
+        // Ainda esta mal temos que ver ainda bem o toList!!! mas já lê bem da net.
         UrlStreamSupplier responseUrl = new UrlStreamSupplier("https://api.github.com/users/achiu/repos");
         BufferedInputStream reader = new BufferedInputStream(responseUrl.get());
         String response = IOUtils.getStringFromInputStream(reader);
-        */
+
         JsonParser parser = new JsonParser();
 
-        GitHubRepo repo = parser.<GitHubRepo>toObject(response, GitHubRepo.class);
+        List<GitHubRepo> repo = parser.<GitHubRepo>toList(response, GitHubRepo.class);
 
         //Assert
-        assertEquals(repo.id,12345);
-        assertEquals(repo.name,"achiu.github.com");
-        assertEquals(repo.full_name,"achiu/achiu.github.com");
+        GitHubRepo repo1 = repo.get(0);
+        assertEquals(repo1.id,363183);
+        assertEquals(repo1.name,"achiu.github.com");
+        assertEquals(repo1.full_name,"achiu/achiu.github.com");
 
 
-        assertEquals(repo.owner.login,"achiu");
-        assertEquals(repo.owner.id,24772);
-        assertEquals(repo.owner.email,"achiu@github.com");
-        assertEquals(repo.owner.location,"San Francisco, CA");
+        assertEquals(repo1.owner.login,"achiu");
+        assertEquals(repo1.owner.id,24772);
+        //assertEquals(repo.owner.email,"achiu@github.com");
+        //assertEquals(repo.owner.location,"San Francisco, CA");
     }
 
 }

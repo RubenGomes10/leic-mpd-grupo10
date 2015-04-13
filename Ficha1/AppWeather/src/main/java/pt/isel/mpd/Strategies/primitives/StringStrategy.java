@@ -2,6 +2,8 @@ package pt.isel.mpd.Strategies.primitives;
 
 import pt.isel.mpd.jsonzai.JsonParser;
 
+import java.lang.reflect.Field;
+
 
 /**
  * Created by HS on 08/04/2015.
@@ -9,7 +11,7 @@ import pt.isel.mpd.jsonzai.JsonParser;
 public class StringStrategy extends PrimitiveStrategies<String> {
 
     @Override
-    public String process(String strJson, Class<?> c, JsonParser jsonParser) {
+    public String process(String strJson,Field field, JsonParser jsonParser) {
        //Ficou equivalente ao do IntegerStrategy
        //Fiz isto para resolver o bug de par chave valor ( key : " ",), ou seja, o valor ser vazio;
        // TODO implementar mais tarde um método genérico para ser chamado aqui com expressão lambda!

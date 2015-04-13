@@ -2,6 +2,7 @@ package pt.isel.mpd.Strategies.primitives;
 
 import pt.isel.mpd.jsonzai.JsonParser;
 
+import java.lang.reflect.Field;
 import java.util.function.Predicate;
 
 /**
@@ -10,7 +11,7 @@ import java.util.function.Predicate;
 public class IntegerStrategy extends PrimitiveStrategies<Integer> {
 
     @Override
-    public Integer process(String s, Class<?> destClass, JsonParser jsonParser) {
+    public Integer process(String s, Field field, JsonParser jsonParser) {
 //        jsonParser.consume(s,jsonParser::consumeSpaces);
         int pos = jsonParser.getPos();
         int lastNumberPos=pos;
