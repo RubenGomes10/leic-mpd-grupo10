@@ -55,6 +55,7 @@ hs_err_pid*
 # Intelij
 
 *.iml
-.idea/
+.idea
+.idea/workspace.xml
 /build
 

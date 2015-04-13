@@ -1,34 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0d63d189-5e7c-43f9-8466-04b5385857ee" name="Default" comment="">
-      <change type="DELETED" beforePath="C:\Users\Rúben Gomes\Desktop\MPDFichas\Ficha1\Ficha1\AppWeather\src\main\java\pt\isel\mpd\Strategies\arrays\ArrayStrategy.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Rúben Gomes\Desktop\MPDFichas\Ficha1\Ficha1\AppWeather\src\main\java\pt\isel\mpd\Strategies\lists\ListIntStrategy.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Rúben Gomes\Desktop\MPDFichas\Ficha1\Ficha1\AppWeather\src\main\java\pt\isel\mpd\parseUtils\ParseUtils.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Rúben Gomes\Desktop\MPDFichas\Ficha1\Ficha1\AppWeather\target\classes\pt\isel\mpd\Strategies\arrays\ArrayStrategy.class" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Rúben Gomes\Desktop\MPDFichas\Ficha1\Ficha1\AppWeather\target\classes\pt\isel\mpd\Strategies\lists\ListIntStrategy.class" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Rúben Gomes\Desktop\MPDFichas\Ficha1\Ficha1\AppWeather\target\classes\pt\isel\mpd\parseUtils\ParseUtils.class" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/pt/isel/mpd/Strategies/primitives/BooleanStrategy.class" afterPath="$PROJECT_DIR$/target/classes/pt/isel/mpd/Strategies/primitives/BooleanStrategy.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/pt/isel/mpd/Strategies/primitives/CharStrategy.class" afterPath="$PROJECT_DIR$/target/classes/pt/isel/mpd/Strategies/primitives/CharStrategy.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/pt/isel/mpd/Strategies/primitives/IntegerStrategy.class" afterPath="$PROJECT_DIR$/target/classes/pt/isel/mpd/Strategies/primitives/IntegerStrategy.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/pt/isel/mpd/jsonzai/JsonParser.class" afterPath="$PROJECT_DIR$/target/classes/pt/isel/mpd/jsonzai/JsonParser.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/test-classes/pt/isel/mpd/jsonzai/JsonParserTest.class" afterPath="$PROJECT_DIR$/target/test-classes/pt/isel/mpd/jsonzai/JsonParserTest.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/pt/isel/mpd/Strategies/lists/ListStrategy.class" afterPath="$PROJECT_DIR$/target/classes/pt/isel/mpd/Strategies/lists/ListStrategy.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/pt/isel/mpd/Strategies/primitives/StringStrategy.class" afterPath="$PROJECT_DIR$/target/classes/pt/isel/mpd/Strategies/primitives/StringStrategy.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/pt/isel/mpd/Strategies/TypeStrategy.class" afterPath="$PROJECT_DIR$/target/classes/pt/isel/mpd/Strategies/TypeStrategy.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../.gitignore" afterPath="$PROJECT_DIR$/../.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/pt/isel/mpd/Strategies/primitives/BooleanStrategy.java" afterPath="$PROJECT_DIR$/src/main/java/pt/isel/mpd/Strategies/primitives/BooleanStrategy.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/pt/isel/mpd/Strategies/primitives/CharStrategy.java" afterPath="$PROJECT_DIR$/src/main/java/pt/isel/mpd/Strategies/primitives/CharStrategy.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/pt/isel/mpd/Strategies/primitives/IntegerStrategy.java" afterPath="$PROJECT_DIR$/src/main/java/pt/isel/mpd/Strategies/primitives/IntegerStrategy.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/pt/isel/mpd/jsonzai/JsonParser.java" afterPath="$PROJECT_DIR$/src/main/java/pt/isel/mpd/jsonzai/JsonParser.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/pt/isel/mpd/jsonzai/JsonParserTest.java" afterPath="$PROJECT_DIR$/src/test/java/pt/isel/mpd/jsonzai/JsonParserTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/pt/isel/mpd/Strategies/lists/ListStrategy.java" afterPath="$PROJECT_DIR$/src/main/java/pt/isel/mpd/Strategies/lists/ListStrategy.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/pt/isel/mpd/Strategies/objects/ObjectStrategy.java" afterPath="$PROJECT_DIR$/src/main/java/pt/isel/mpd/Strategies/objects/ObjectStrategy.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/pt/isel/mpd/Strategies/primitives/StringStrategy.java" afterPath="$PROJECT_DIR$/src/main/java/pt/isel/mpd/Strategies/primitives/StringStrategy.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/pt/isel/mpd/Strategies/TypeStrategy.java" afterPath="$PROJECT_DIR$/src/main/java/pt/isel/mpd/Strategies/TypeStrategy.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="0d63d189-5e7c-43f9-8466-04b5385857ee" name="Default" comment="" />
     <ignored path="AppWeather.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/out/" />
@@ -57,8 +30,8 @@
       <file leaf-file-name="JsonParserTest.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/test/java/pt/isel/mpd/jsonzai/JsonParserTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.7810811" vertical-offset="0" max-vertical-offset="1581">
-              <caret line="27" column="60" selection-start-line="27" selection-start-column="60" selection-end-line="27" selection-end-column="60" />
+            <state vertical-scroll-proportion="0.87297297" vertical-offset="0" max-vertical-offset="1581">
+              <caret line="29" column="67" selection-start-line="29" selection-start-column="67" selection-end-line="29" selection-end-column="67" />
               <folding>
                 <element signature="e#3841#3853#0" expanded="true" />
               </folding>
@@ -792,12 +765,12 @@
       <workItem from="1428744266452" duration="13541000" />
       <workItem from="1428849458593" duration="11785000" />
       <workItem from="1428918214380" duration="1600000" />
-      <workItem from="1428934918385" duration="3624000" />
+      <workItem from="1428934918385" duration="4220000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="79826000" />
+    <option name="totallyTimeSpent" value="80422000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1378" height="744" extended-state="1" />
@@ -814,7 +787,7 @@
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32843137" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32843137" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24962063" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -1295,8 +1268,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/pt/isel/mpd/jsonzai/JsonParserTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7810811" vertical-offset="0" max-vertical-offset="1581">
-          <caret line="27" column="60" selection-start-line="27" selection-start-column="60" selection-end-line="27" selection-end-column="60" />
+        <state vertical-scroll-proportion="0.87297297" vertical-offset="0" max-vertical-offset="1581">
+          <caret line="29" column="67" selection-start-line="29" selection-start-column="67" selection-end-line="29" selection-end-column="67" />
           <folding>
             <element signature="e#3841#3853#0" expanded="true" />
           </folding>
