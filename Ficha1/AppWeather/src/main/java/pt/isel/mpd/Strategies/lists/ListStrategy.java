@@ -12,11 +12,11 @@ import java.lang.reflect.ParameterizedType;
 public class ListStrategy<T> implements TypeStrategy<T> {
 
     @Override
-    public T process(String s, Field field, JsonParser jsonParser) {
-
+    public void process(String src, T instance, Field field, JsonParser jsonParser) throws Exception {
         ParameterizedType pType = (ParameterizedType)field.getGenericType();
         Class<T> classField = (Class<T>) pType.getActualTypeArguments()[0];
 
-        return (T) jsonParser.toList(s,classField);
+        if (field!= null) field.set(instance, jsonParser.toList(src, classField));
+
     }
 }

@@ -9,5 +9,5 @@ import java.lang.reflect.Field;
  */
 public interface TypeStrategy <T>{
 
-    T process (String s,Field field, JsonParser jsonParser);
+    void process(String src, T instance, Field field, JsonParser jsonParser) throws Exception;
 }

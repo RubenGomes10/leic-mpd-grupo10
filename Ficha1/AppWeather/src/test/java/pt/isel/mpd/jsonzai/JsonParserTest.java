@@ -1,13 +1,12 @@
 package pt.isel.mpd.jsonzai;
 
 import org.junit.Test;
-import pt.isel.mpd.Github.GitHubRepo;
-import pt.isel.mpd.Github.GitHubUser;
+import pt.isel.mpd.Github.GithubRepo;
+import pt.isel.mpd.Github.GithubUser;
 import pt.isel.mpd.streamUtils.IOUtils;
 import pt.isel.mpd.streamUtils.UrlStreamSupplier;
 
 import java.io.BufferedInputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -22,7 +21,7 @@ public class JsonParserTest {
     String endDate = "&enddate=2015-03-30";
 
     @Test
-    public void assertObjectIsOk () throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public void assertObjectIsOk () throws Exception {
         // Arrange
 
         UrlStreamSupplier responseUrl = new UrlStreamSupplier("https://api.github.com/users/achiu");
@@ -32,7 +31,7 @@ public class JsonParserTest {
 
         //Act
 
-        GitHubUser user = parser.<GitHubUser>toObject(response, GitHubUser.class);
+        GithubUser user = parser.<GithubUser>toObject(response, GithubUser.class);
 
         //Assert
         assertEquals(user.login,"achiu");
@@ -43,7 +42,7 @@ public class JsonParserTest {
 
 
     @Test
-    public void assertMultipleObjectIsOk() throws IllegalAccessException, InstantiationException {
+    public void assertMultipleObjectIsOk() throws Exception {
        /* String response = "{\n" +
                 "    \"id\": 12345,\n" +
                 "    \"name\": \"achiu.github.com\",\n" +
@@ -78,10 +77,10 @@ public class JsonParserTest {
 
         JsonParser parser = new JsonParser();
 
-        List<GitHubRepo> repo = parser.<GitHubRepo>toList(response, GitHubRepo.class);
+        List<GithubRepo> repo = parser.<GithubRepo>toList(response, GithubRepo.class);
 
         //Assert
-        GitHubRepo repo1 = repo.get(0);
+        GithubRepo repo1 = repo.get(0);
         assertEquals(repo1.id,363183);
         assertEquals(repo1.name,"achiu.github.com");
         assertEquals(repo1.full_name,"achiu/achiu.github.com");

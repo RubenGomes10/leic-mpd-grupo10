@@ -1,5 +1,6 @@
 package pt.isel.mpd.streamUtils;
 
+
 import com.google.common.io.ByteStreams;
 
 import java.io.ByteArrayInputStream;

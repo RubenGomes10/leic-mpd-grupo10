@@ -1,5 +1,7 @@
 package pt.isel.mpd.Strategies.primitives;
 
+
+import pt.isel.mpd.Strategies.TypeStrategy;
 import pt.isel.mpd.jsonzai.JsonParser;
 
 import java.lang.reflect.Field;
@@ -7,12 +9,21 @@ import java.lang.reflect.Field;
 /**
  * Created by Ruben Gomes on 10/04/2015.
  */
-public class BooleanStrategy extends PrimitiveStrategies<Boolean> {
+public class BooleanStrategy<T> implements TypeStrategy<T>{
 
     @Override
-    public Boolean process(String s, Field field, JsonParser jsonParser){
+    public void process(String src, T instance, Field field, JsonParser jsonParser) throws Exception {
 
-        return (s.equals("false"))? false : true;
+        int pos = jsonParser.getPos();
+        int currentPos = pos;
+        char character = src.charAt(++currentPos);
+
+        while(character != ',' && character != '}' && character != ']'){
+            character = src.charAt(++currentPos);
+        }
+        jsonParser.setPos(currentPos + 1);
+
+        boolean b = Boolean.parseBoolean(src.substring(pos + 1, currentPos));
+        if (field!= null) field.set(instance, b);
     }
 }
-
