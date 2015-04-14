@@ -11,9 +11,9 @@ import java.util.List;
 public class WeatherCurrentCondition {
 
 
-    public int FeelsLikeC;
-    public int humidity;
-    public int temp_C;
+    public String FeelsLikeC;
+    public String humidity;
+    public String temp_C;
     public String observation_time;
     public String windspeedKmph;
     List<WeatherDesc> weatherDesc;

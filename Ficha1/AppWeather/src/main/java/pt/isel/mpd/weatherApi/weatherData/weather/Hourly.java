@@ -7,10 +7,10 @@ import java.util.List;
  */
 public class Hourly {
 
-    public int FeelsLikeC;
-    public int HeatIndexC;
-    public int humidity;
-    public int tempC;
+    public String  FeelsLikeC;
+    public String  HeatIndexC;
+    public String  humidity;
+    public String  tempC;
     public String time;
     public String windspeedKmph;
     List<WeatherDesc> weatherDesc;

@@ -1,7 +1,7 @@
 package pt.isel.mpd.Github;
 
 public class GithubUser {
-    public char login;
+    public String login;
     public int id;
     public String email;
     public String location;

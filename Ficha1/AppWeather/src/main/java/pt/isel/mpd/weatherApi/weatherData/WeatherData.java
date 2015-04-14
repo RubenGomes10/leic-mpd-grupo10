@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by Ruben Gomes on 14/04/2015.
  */
-public class WeatherData { 
+public class WeatherData {
 
     public List<WeatherCurrentCondition> current_condition;
     public List<WeatherRequest> request;

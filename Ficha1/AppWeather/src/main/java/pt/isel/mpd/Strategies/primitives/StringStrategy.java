@@ -25,7 +25,7 @@ public class StringStrategy<T> implements TypeStrategy<T> {
         jsonParser.setPos(currentPos + 1);
         if (field!= null) {
             if (Date.class.isAssignableFrom(field.getType())) {
-                
+
                 //TODO converter para date
             } else if (char.class.isAssignableFrom(field.getType())) {
                 field.set(instance, src.charAt(pos + 1));

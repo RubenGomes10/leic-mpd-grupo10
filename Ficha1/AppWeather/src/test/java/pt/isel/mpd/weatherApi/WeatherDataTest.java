@@ -29,9 +29,12 @@ public class WeatherDataTest {
         uri = URL_API+LOCATION+FORMAT+APP_KEY+DATE+ENDDATE;
     }
 
-    @Test
-    public  void testWeatherDayDataRequest() throws Exception {
 
+
+    @Test
+
+    public  void testWeatherDayDataRequest() throws Exception {
+        System.out.println(uri);
         UrlStreamSupplier responseUrl = new UrlStreamSupplier(uri);
         BufferedInputStream reader = new BufferedInputStream(responseUrl.get());
         String response = IOUtils.getStringFromInputStream(reader);
