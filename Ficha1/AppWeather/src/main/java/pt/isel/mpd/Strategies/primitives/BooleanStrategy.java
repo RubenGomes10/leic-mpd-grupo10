@@ -6,9 +6,6 @@ import pt.isel.mpd.jsonzai.JsonParser;
 
 import java.lang.reflect.Field;
 
-/**
- * Created by Ruben Gomes on 10/04/2015.
- */
 public class BooleanStrategy<T> implements TypeStrategy<T>{
 
     @Override
@@ -16,14 +13,14 @@ public class BooleanStrategy<T> implements TypeStrategy<T>{
 
         int pos = jsonParser.getPos();
         int currentPos = pos;
-        char character = src.charAt(++currentPos);
+        char character = src.charAt(currentPos++);
 
         while(character != ',' && character != '}' && character != ']'){
             character = src.charAt(++currentPos);
         }
         jsonParser.setPos(currentPos + 1);
 
-        boolean b = Boolean.parseBoolean(src.substring(pos + 1, currentPos));
+        boolean b = Boolean.parseBoolean(src.substring(pos, currentPos));
         if (field!= null) field.set(instance, b);
     }
 }

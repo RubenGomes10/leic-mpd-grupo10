@@ -34,10 +34,16 @@ public class JsonParserTest {
         GithubUser user = parser.<GithubUser>toObject(response, GithubUser.class);
 
         //Assert
-        assertEquals(user.login,"achiu");
+        assertEquals(user.login,'a');
         assertEquals(user.id,24772);
         assertEquals(user.email,"achiu@github.com");
         assertEquals(user.location,"San Francisco, CA");
+
+
+        assertEquals(user.avatar_url,'h');
+        assertEquals(user.gravatar_id,"");
+        assertEquals(user.site_admin,true);
+
     }
 
 

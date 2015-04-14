@@ -6,9 +6,6 @@ import pt.isel.mpd.jsonzai.JsonParser;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 
-/**
- * Created by Ruben Gomes on 09/04/2015.
- */
 public class ListStrategy<T> implements TypeStrategy<T> {
 
     @Override

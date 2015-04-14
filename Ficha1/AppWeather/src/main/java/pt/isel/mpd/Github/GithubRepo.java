@@ -1,8 +1,5 @@
 package pt.isel.mpd.Github;
 
-/**
- * Created by HS on 07/04/2015.
- */
 public class GithubRepo {
     public int id;
     public String name;

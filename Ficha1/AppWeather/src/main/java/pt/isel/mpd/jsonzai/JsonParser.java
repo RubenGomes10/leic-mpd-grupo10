@@ -8,6 +8,8 @@ import pt.isel.mpd.Strategies.primitives.IntegerStrategy;
 import pt.isel.mpd.Strategies.primitives.StringStrategy;
 
 import java.lang.reflect.Field;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,15 +17,20 @@ import java.util.Map;
 
 public class JsonParser {
 
-   private int pos;
+    private int pos;
+
+    private DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
     private Map<Character, TypeStrategy> map;
 
     public JsonParser() {
         map = new HashMap<>();
-        this.pos = 1;
+        this.pos = 0;
         initializeMap();
-    }
 
+    }
+    public DateFormat getDateFormat() {
+        return dateFormat;
+    }
     public int getPos() {
         return pos;
     }
@@ -61,7 +68,7 @@ public class JsonParser {
 
     private <T> T internalParseJson(String jsonStr, T instance) throws Exception {
 
-        while(true) {
+         do {
             String jsonFieldName = getNextJsonFieldName(jsonStr);
             Field field = getField(jsonFieldName, instance.getClass());
 
@@ -69,10 +76,8 @@ public class JsonParser {
             TypeStrategy ts = this.map.get(nextType);
 
             ts.process(jsonStr, instance, field, this);
-
-            if (finishedObject(jsonStr))
-                break;
         }
+         while(!finishedObject(jsonStr));
 
         return instance;
     }
@@ -101,12 +106,10 @@ public class JsonParser {
     }
 
     private boolean finishedObject(String substring) {
-        char c = getNextCloseJasonObject(substring);
-        if (c == '}') return  true;
-        else return false;
+        return getNextJsonStateChar(substring) == '}';
     }
 
-    private char getNextCloseJasonObject(String substring) {
+    private char getNextJsonStateChar(String substring) {
 
         char c = substring.charAt(pos);
         while ( c !=']'&&

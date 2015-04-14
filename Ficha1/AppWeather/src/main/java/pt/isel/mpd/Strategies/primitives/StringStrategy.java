@@ -4,11 +4,8 @@ import pt.isel.mpd.Strategies.TypeStrategy;
 import pt.isel.mpd.jsonzai.JsonParser;
 
 import java.lang.reflect.Field;
+import java.util.Date;
 
-
-/**
- * Created by HS on 08/04/2015.
- */
 public class StringStrategy<T> implements TypeStrategy<T> {
 
     @Override
@@ -24,8 +21,16 @@ public class StringStrategy<T> implements TypeStrategy<T> {
         while(character != '\"'){
             character = src.charAt(++currentPos);
         }
-        jsonParser.setPos(currentPos + 1);
 
-        if (field!= null) field.set(instance, src.substring(pos + 1, currentPos));
+        jsonParser.setPos(currentPos + 1);
+        if (field!= null) {
+            if (Date.class.isAssignableFrom(field.getType())) {
+                
+                //TODO converter para date
+            } else if (char.class.isAssignableFrom(field.getType())) {
+                field.set(instance, src.charAt(pos + 1));
+            } else
+                field.set(instance, src.substring(pos + 1, currentPos));
+        }
     }
 }

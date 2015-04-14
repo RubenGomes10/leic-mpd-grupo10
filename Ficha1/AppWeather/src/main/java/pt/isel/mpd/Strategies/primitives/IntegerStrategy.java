@@ -6,9 +6,6 @@ import pt.isel.mpd.jsonzai.JsonParser;
 import java.lang.reflect.Field;
 import java.util.function.Predicate;
 
-/**
- * Created by HS on 08/04/2015.
- */
 public class IntegerStrategy<T> implements TypeStrategy<T> {
 
     @Override
