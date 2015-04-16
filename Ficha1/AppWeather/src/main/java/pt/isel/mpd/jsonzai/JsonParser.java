@@ -24,7 +24,7 @@ public class JsonParser {
 
     public JsonParser() {
         map = new HashMap<>();
-        this.pos = 0;
+        this.pos = 1;
         initializeMap();
 
     }

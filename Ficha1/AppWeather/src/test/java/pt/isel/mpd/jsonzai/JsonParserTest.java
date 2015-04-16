@@ -1,13 +1,17 @@
 package pt.isel.mpd.jsonzai;
 
 
+import org.junit.BeforeClass;
 import org.junit.Test;
-import pt.isel.mpd.Github.GithubRepo;
-import pt.isel.mpd.Github.GithubUser;
-import pt.isel.mpd.streamUtils.IOUtils;
-import pt.isel.mpd.streamUtils.UrlStreamSupplier;
+import pt.isel.mpd.jsonzai.classesForTest.objectsClasses.TestObjectInternal;
+import pt.isel.mpd.jsonzai.classesForTest.objectsClasses.TestObjects;
+import pt.isel.mpd.jsonzai.classesForTest.objectsClasses.TestSimpleObject;
+import pt.isel.mpd.jsonzai.classesForTest.primitivesClasses.*;
+import pt.isel.mpd.jsonzai.objects.MyObject;
+import pt.isel.mpd.jsonzai.objects.ObjectWithInternalObject;
+import pt.isel.mpd.jsonzai.objects.TestObject;
+import pt.isel.mpd.jsonzai.primitives.*;
 
-import java.io.BufferedInputStream;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -15,54 +19,131 @@ import static org.junit.Assert.assertEquals;
 
 public class JsonParserTest {
 
+    private static JsonParser parser;
+    private static String jsonStr;
+    public Primitive primitiveResp;
+    public MyObject objectResp;
+
+    @BeforeClass
+    public static void InstantiateJsonParser(){
+        parser = new JsonParser();
+    }
+
     @Test
-    public void assertObjectIsOk () throws Exception {
-        // Arrange
+    public void testIntInJsonString() throws Exception {
 
-        UrlStreamSupplier responseUrl = new UrlStreamSupplier("https://api.github.com/users/achiu");
-        BufferedInputStream reader = new BufferedInputStream(responseUrl.get());
-        String response = IOUtils.getStringFromInputStream(reader);
-        JsonParser parser = new JsonParser();
+        TestPrimitives<Integer> testInt = new IntTest(10, 20, 30);
+        List<Integer> values = getValuesForTestPrimitives(testInt, new PrimitiveInt());
 
-        //Act
-
-        GithubUser user = parser.<GithubUser>toObject(response, GithubUser.class);
-
-        //Assert
-        assertEquals(user.login,"achiu");
-        assertEquals(user.id,24772);
-        assertEquals(user.email,"achiu@github.com");
-        assertEquals(user.location,"San Francisco, CA");
-
-
-        assertEquals(user.avatar_url,'h');
-        assertEquals(user.gravatar_id,"");
-        assertEquals(user.site_admin,true);
-
+        assertEquals(values.get(0).intValue(),10);
+        assertEquals(values.get(1).intValue(),20);
+        assertEquals(values.get(2).intValue(),30);
     }
 
 
     @Test
-    public void assertMultipleObjectIsOk() throws Exception {
+    public void test_int_in_json_string_with_spaces() throws Exception {
 
-        UrlStreamSupplier responseUrl = new UrlStreamSupplier("https://api.github.com/users/achiu/repos");
-        BufferedInputStream reader = new BufferedInputStream(responseUrl.get());
-        String response = IOUtils.getStringFromInputStream(reader);
+        TestPrimitives<Integer> testInt = new IntTest(4000, 5000, 4000);
+        List<Integer> values =  getValuesForTestWithSpaces(testInt,new PrimitiveInt());
 
-        JsonParser parser = new JsonParser();
+        assertEquals(values.get(0).intValue(),4000);
+        assertEquals(values.get(1).intValue(),5000);
+        assertEquals(values.get(2).intValue(),4000);
+    }
 
-        List<GithubRepo> repo = parser.<GithubRepo>toList(response, GithubRepo.class);
+    @Test
+    public void test_char_in_json_String() throws Exception {
 
-        //Assert
-        GithubRepo repo1 = repo.get(0);
-        assertEquals(repo1.id,363183);
-        assertEquals(repo1.name,"achiu.github.com");
-        assertEquals(repo1.full_name,"achiu/achiu.github.com");
+        TestPrimitives<Character> testChar = new CharTest('A','B','C');
+        List<Character> values = getValuesForTestPrimitives(testChar, new PrimitiveChar());
 
-        assertEquals(repo1.owner.login,"achiu");
-        assertEquals(repo1.owner.id,24772);
+        assertEquals(values.get(0).charValue(),'A');
+        assertEquals(values.get(1).charValue(),'B');
+        assertEquals(values.get(2).charValue(),'C');
 
     }
+
+    @Test
+    public void test_boolean_in_json_string() throws Exception {
+        TestPrimitives<Boolean> testBoolean = new BooleanTest(false,true,true);
+        List<Boolean> values = getValuesForTestPrimitives(testBoolean, new PrimitiveBoolean());
+
+        assertEquals(values.get(0).booleanValue(),false);
+        assertEquals(values.get(1).booleanValue(),true);
+        assertEquals(values.get(2).booleanValue(),true);
+    }
+
+    @Test
+    public void test_String_withSpaces_and_comma_in_double_quotes() throws Exception {
+        TestPrimitives<String> testString = new StringTest("ISEL, Lisboa","Murteira, Alcobaça", "Parque das Nações");
+        List<String> values = getValuesForTestPrimitives(testString, new PrimitiveString());
+
+        assertEquals(values.get(0),"ISEL, Lisboa");
+        assertEquals(values.get(1),"Murteira, Alcobaça");
+        assertEquals(values.get(2),"Parque das Nações");
+    }
+
+    /*TODO
+    @Test
+    public void test_Date_in_json_string() throws Exception {
+        TestPrimitives<Date> testDate = new DateTest(new Date(2015,04,16));
+        List<Date> values = getValuesForTestPrimitives(testDate,new PrimitiveDate());
+
+        assertEquals(values.get(0),2015-04-16);
+
+    }
+    */
+
+    @Test
+    public void test_simple_object_with_mixed_primitives() throws Exception {
+        TestObjects simpleObjectTest = new TestSimpleObject(10,'R',true,"Rúben Gomes");
+        List<Object> values = getValuesForTestObjects(simpleObjectTest, new TestObject());
+
+        assertEquals(values.get(0),10);
+        assertEquals(values.get(1),'R');
+        assertEquals(values.get(2),true);
+        assertEquals(values.get(3),"Rúben Gomes");
+    }
+
+    @Test
+    public void test_internalObject_with_mixed_primitives() throws Exception {
+        TestObjects internalObjectTest = new TestObjectInternal("LEIC","Rúben Gomes",39367,true);
+        List<Object> values = getValuesForTestObjects(internalObjectTest,new ObjectWithInternalObject());
+
+        assertEquals(values.get(0),"LEIC");
+        assertEquals(values.get(1),"Rúben Gomes");
+        assertEquals(values.get(2),39367);
+        assertEquals(values.get(3),true);
+    }
+
+
+
+    private List<Object> getValuesForTestObjects(TestObjects simpleObjectTest, MyObject testObject) throws Exception {
+        jsonStr = simpleObjectTest.getString();
+        objectResp = parser.toObject(jsonStr,testObject.getClass());
+        return objectResp.getValues();
+    }
+
+
+    private <T>List<T> getValuesForTestPrimitives(TestPrimitives<T> src, Primitive primitive) throws Exception {
+        jsonStr = src.getString();
+        primitiveResp = parser.toObject(jsonStr,primitive.getClass());
+        return primitiveResp.getValues();
+
+    }
+
+    private <T>List<T> getValuesForTestWithSpaces(TestPrimitives<T> src,Primitive primitive) throws Exception {
+        jsonStr = src.getStringWithSpaces();
+        primitiveResp = parser.toObject(jsonStr, primitive.getClass());
+        return primitiveResp.getValues();
+    }
+
+
+
+
+
+
 
 }
 

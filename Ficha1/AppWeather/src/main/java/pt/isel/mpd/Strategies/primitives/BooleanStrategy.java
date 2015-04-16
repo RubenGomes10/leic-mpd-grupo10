@@ -13,12 +13,14 @@ public class BooleanStrategy<T> implements TypeStrategy<T>{
 
         int pos = jsonParser.getPos();
         int currentPos = pos;
-        char character = src.charAt(currentPos++);
+        char character = src.charAt(currentPos);
 
-        while(character != ',' && character != '}' && character != ']'){
+        while(character != ',' && character != '}'
+                && character != ']' && character != '\n'){
+
             character = src.charAt(++currentPos);
         }
-        jsonParser.setPos(currentPos + 1);
+        jsonParser.setPos(currentPos);
 
         boolean b = Boolean.parseBoolean(src.substring(pos, currentPos));
         if (field!= null) field.set(instance, b);

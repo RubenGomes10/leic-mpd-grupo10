@@ -23,10 +23,15 @@ public class WeatherDataTest {
     private static final String DATE = "&date=2015-03-20";
     private static final String ENDDATE = "&enddate=2015-03-30";
     private static String uri;
+    private static JsonParser parser;
+    private static UrlStreamSupplier responseUrl;
 
     @BeforeClass
     public static void setUri(){
-        uri = URL_API+LOCATION+FORMAT+APP_KEY+DATE+ENDDATE;
+        uri = URL_API+LOCATION+FORMAT+APP_KEY;
+        parser = new JsonParser();
+        responseUrl = new UrlStreamSupplier(uri);
+
     }
 
 
@@ -35,13 +40,9 @@ public class WeatherDataTest {
 
     public  void testWeatherDayDataRequest() throws Exception {
         System.out.println(uri);
-        UrlStreamSupplier responseUrl = new UrlStreamSupplier(uri);
         BufferedInputStream reader = new BufferedInputStream(responseUrl.get());
         String response = IOUtils.getStringFromInputStream(reader);
-        JsonParser parser = new JsonParser();
-
         WeatherDay weatherDay = parser.<WeatherDay>toObject(response,WeatherDay.class);
-
         WeatherRequest weatherRequest = weatherDay.data.request.get(0);
 
         assertEquals(weatherRequest.query,"Lisbon, Portugal");
