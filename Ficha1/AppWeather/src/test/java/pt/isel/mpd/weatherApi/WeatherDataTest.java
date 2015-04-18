@@ -18,8 +18,8 @@ public class WeatherDataTest {
     private static final String URL_API = "http://api.worldweatheronline.com/free/v2/weather.ashx?";
     private static final String LOCATION = "q=Lisbon";
     private static final String FORMAT = "&format=json";
-    private static final String DATE = "&date=2015-03-20";
-    private static final String ENDDATE = "&enddate=2015-03-30";
+    //private static final String DATE = "&date=2015-03-20";
+    //private static final String END_DATE = "&enddate=2015-03-30";
     private static String uri;
     private static JsonParser parser;
     private static UrlStreamSupplier responseUrl;

@@ -55,7 +55,10 @@ hs_err_pid*
 # Intelij
 
 *.iml
-.idea
-Ficha1/AppWeather/.idea/workspace.xml
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
 /build
 

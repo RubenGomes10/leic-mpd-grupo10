@@ -1,6 +1,5 @@
 package pt.isel.mpd.jsonzai.objects;
 
-import java.sql.Date;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,7 +11,6 @@ public class TestObject extends MyObject {
     public int value;
     public char character;
     public boolean state;
-    public Date date;
     public String str;
 
     @Override

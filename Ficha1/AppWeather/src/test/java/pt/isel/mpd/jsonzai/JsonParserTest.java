@@ -23,6 +23,7 @@ public class JsonParserTest {
     private static String jsonStr;
     public Primitive primitiveResp;
     public MyObject objectResp;
+    public JsonParser parser;
 
     @Test
     public void testIntInJsonString() throws Exception {
@@ -112,21 +113,21 @@ public class JsonParserTest {
 
     private List<Object> getValuesForTestObjects(TestObjects simpleObjectTest, MyObject testObject) throws Exception {
         jsonStr = simpleObjectTest.getString();
-        JsonParser parser = new JsonParser();
+        parser = new JsonParser();
         objectResp = parser.toObject(jsonStr,testObject.getClass());
         return objectResp.getValues();
     }
 
     private <T>List<T> getValuesForTestPrimitives(TestPrimitives<T> src, Primitive primitive) throws Exception {
         jsonStr = src.getString();
-        JsonParser parser = new JsonParser();
+        parser = new JsonParser();
         primitiveResp = parser.toObject(jsonStr,primitive.getClass());
         return primitiveResp.getValues();
     }
 
     private <T>List<T> getValuesForTestWithSpaces(TestPrimitives<T> src,Primitive primitive) throws Exception {
         jsonStr = src.getStringWithSpaces();
-        JsonParser parser = new JsonParser();
+        parser = new JsonParser();
         primitiveResp = parser.toObject(jsonStr, primitive.getClass());
         return primitiveResp.getValues();
     }
