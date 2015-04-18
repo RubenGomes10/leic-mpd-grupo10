@@ -10,10 +10,10 @@ public class ListStrategy<T> implements TypeStrategy<T> {
 
     @Override
     public void process(String src, T instance, Field field, JsonParser jsonParser) throws Exception {
-        ParameterizedType pType = (ParameterizedType)field.getGenericType();
-        Class<T> classField = (Class<T>) pType.getActualTypeArguments()[0];
-
-        if (field!= null) field.set(instance, jsonParser.toList(src, classField));
-
+        if (field!= null) {
+            ParameterizedType pType = (ParameterizedType) field.getGenericType();
+            Class<T> classField = (Class<T>) pType.getActualTypeArguments()[0];
+            field.set(instance, jsonParser.toList(src, classField));
+        }
     }
 }

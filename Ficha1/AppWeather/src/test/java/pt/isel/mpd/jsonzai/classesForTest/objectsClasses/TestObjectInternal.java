@@ -1,13 +1,10 @@
 package pt.isel.mpd.jsonzai.classesForTest.objectsClasses;
 
-/**
- * Created by Ruben Gomes on 16/04/2015.
- */
+
 public  class TestObjectInternal extends TestObjects {
 
     public TestObjectInternal(String course,String name,int number,boolean isStudent) {
         super(course,name,number,isStudent);
-
     }
 
     @Override
@@ -20,7 +17,6 @@ public  class TestObjectInternal extends TestObjects {
                               "\"isStudent\" = "+ values.get(3) +"\n \t" +
                              "} \n"+
                 "}";
-
     }
 
     @Override

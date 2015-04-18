@@ -1,7 +1,6 @@
 package pt.isel.mpd.jsonzai;
 
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 import pt.isel.mpd.jsonzai.classesForTest.objectsClasses.TestObjectInternal;
 import pt.isel.mpd.jsonzai.classesForTest.objectsClasses.TestObjects;
@@ -12,6 +11,8 @@ import pt.isel.mpd.jsonzai.objects.ObjectWithInternalObject;
 import pt.isel.mpd.jsonzai.objects.TestObject;
 import pt.isel.mpd.jsonzai.primitives.*;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -19,15 +20,9 @@ import static org.junit.Assert.assertEquals;
 
 public class JsonParserTest {
 
-    private static JsonParser parser;
     private static String jsonStr;
     public Primitive primitiveResp;
     public MyObject objectResp;
-
-    @BeforeClass
-    public static void InstantiateJsonParser(){
-        parser = new JsonParser();
-    }
 
     @Test
     public void testIntInJsonString() throws Exception {
@@ -39,7 +34,6 @@ public class JsonParserTest {
         assertEquals(values.get(1).intValue(),20);
         assertEquals(values.get(2).intValue(),30);
     }
-
 
     @Test
     public void test_int_in_json_string_with_spaces() throws Exception {
@@ -61,7 +55,6 @@ public class JsonParserTest {
         assertEquals(values.get(0).charValue(),'A');
         assertEquals(values.get(1).charValue(),'B');
         assertEquals(values.get(2).charValue(),'C');
-
     }
 
     @Test
@@ -84,16 +77,16 @@ public class JsonParserTest {
         assertEquals(values.get(2),"Parque das Nações");
     }
 
-    /*TODO
     @Test
     public void test_Date_in_json_string() throws Exception {
-        TestPrimitives<Date> testDate = new DateTest(new Date(2015,04,16));
-        List<Date> values = getValuesForTestPrimitives(testDate,new PrimitiveDate());
+        DateFormat dateFormat = new JsonParser().getDateFormat();
+        TestPrimitives<Date> testDate = new DateTest("2015-04-05", "2013-06-28", "2000-10-15");
+        List<Date> values = getValuesForTestPrimitives(testDate, new PrimitiveDate());
 
-        assertEquals(values.get(0),2015-04-16);
-
+        assertEquals(values.get(0), dateFormat.parse("2015-04-05"));
+        assertEquals(values.get(1), dateFormat.parse("2013-06-28"));
+        assertEquals(values.get(2), dateFormat.parse("2000-10-15"));
     }
-    */
 
     @Test
     public void test_simple_object_with_mixed_primitives() throws Exception {
@@ -117,33 +110,24 @@ public class JsonParserTest {
         assertEquals(values.get(3),true);
     }
 
-
-
     private List<Object> getValuesForTestObjects(TestObjects simpleObjectTest, MyObject testObject) throws Exception {
         jsonStr = simpleObjectTest.getString();
+        JsonParser parser = new JsonParser();
         objectResp = parser.toObject(jsonStr,testObject.getClass());
         return objectResp.getValues();
     }
 
-
     private <T>List<T> getValuesForTestPrimitives(TestPrimitives<T> src, Primitive primitive) throws Exception {
         jsonStr = src.getString();
+        JsonParser parser = new JsonParser();
         primitiveResp = parser.toObject(jsonStr,primitive.getClass());
         return primitiveResp.getValues();
-
     }
 
     private <T>List<T> getValuesForTestWithSpaces(TestPrimitives<T> src,Primitive primitive) throws Exception {
         jsonStr = src.getStringWithSpaces();
+        JsonParser parser = new JsonParser();
         primitiveResp = parser.toObject(jsonStr, primitive.getClass());
         return primitiveResp.getValues();
     }
-
-
-
-
-
-
-
 }
-

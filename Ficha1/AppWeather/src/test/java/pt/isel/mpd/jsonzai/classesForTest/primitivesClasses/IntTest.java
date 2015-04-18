@@ -1,8 +1,6 @@
 package pt.isel.mpd.jsonzai.classesForTest.primitivesClasses;
 
-/**
- * Created by Ruben Gomes on 16/04/2015.
- */
+
 public class IntTest extends TestPrimitives {
 
     public IntTest(int value1, int value2, int value3) {

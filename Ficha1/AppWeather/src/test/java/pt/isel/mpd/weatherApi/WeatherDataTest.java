@@ -11,9 +11,7 @@ import java.io.BufferedInputStream;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created by Ruben Gomes on 14/04/2015.
- */
+
 public class WeatherDataTest {
 
     private static final String APP_KEY = "&key=bc7c2e7a68a6f65cab1533b2c9ce9";
@@ -31,13 +29,9 @@ public class WeatherDataTest {
         uri = URL_API+LOCATION+FORMAT+APP_KEY;
         parser = new JsonParser();
         responseUrl = new UrlStreamSupplier(uri);
-
     }
 
-
-
     @Test
-
     public  void testWeatherDayDataRequest() throws Exception {
         System.out.println(uri);
         BufferedInputStream reader = new BufferedInputStream(responseUrl.get());
@@ -47,12 +41,5 @@ public class WeatherDataTest {
 
         assertEquals(weatherRequest.query,"Lisbon, Portugal");
         assertEquals(weatherRequest.type,"City");
-        
-
-
-
-
     }
-
-
 }

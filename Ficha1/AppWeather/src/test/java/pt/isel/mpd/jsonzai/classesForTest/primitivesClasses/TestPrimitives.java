@@ -5,12 +5,10 @@ import pt.isel.mpd.jsonzai.ISupplier;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Ruben Gomes on 16/04/2015.
- */
+
 public abstract class TestPrimitives<T> implements ISupplier<String> {
 
-    protected  List<T> values;
+    protected List<T> values;
 
     public TestPrimitives(T value1, T value2, T value3){
         this.values = new ArrayList<T>();
@@ -52,5 +50,4 @@ public abstract class TestPrimitives<T> implements ISupplier<String> {
 
         return sb.toString();
     }
-
 }

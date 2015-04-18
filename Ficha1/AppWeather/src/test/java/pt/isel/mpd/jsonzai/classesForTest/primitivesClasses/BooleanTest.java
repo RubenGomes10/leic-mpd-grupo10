@@ -1,8 +1,6 @@
 package pt.isel.mpd.jsonzai.classesForTest.primitivesClasses;
 
-/**
- * Created by Ruben Gomes on 16/04/2015.
- */
+
 public class BooleanTest extends TestPrimitives<Boolean> {
 
     public BooleanTest(boolean flag1, boolean flag2, boolean flag3) {

@@ -5,9 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Created by Ruben Gomes on 31/03/2015.
- */
+
 public class Weather {
 
     public List<Astronomy> day_astronomy;
@@ -21,6 +19,6 @@ public class Weather {
     public String  uvIndex;
 
 
-    DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+    public DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
 }

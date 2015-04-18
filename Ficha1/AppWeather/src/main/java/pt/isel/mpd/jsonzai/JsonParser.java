@@ -18,8 +18,7 @@ import java.util.Map;
 public class JsonParser {
 
     private int pos;
-
-    private DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+    private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private Map<Character, TypeStrategy> map;
 
     public JsonParser() {
@@ -66,19 +65,19 @@ public class JsonParser {
         return internalParseJson(src, instance);
     }
 
-    private <T> T internalParseJson(String jsonStr, T instance) throws Exception {
+    private <T> T internalParseJson(String src, T instance) throws Exception {
 
          do {
-            String jsonFieldName = getNextJsonFieldName(jsonStr);
+            String jsonFieldName = getNextJsonFieldName(src);
             Field field = getField(jsonFieldName, instance.getClass());
 
-            char nextType = getNextFieldType(jsonStr);
+            char nextType = getNextFieldType(src);
             TypeStrategy ts = this.map.get(nextType);
 
-            ts.process(jsonStr, instance, field, this);
+            ts.process(src, instance, field, this);
         }
-         while(!finishedObject(jsonStr));
-
+         while(!finishedObject(src));
+        pos++;
         return instance;
     }
 
@@ -88,54 +87,59 @@ public class JsonParser {
 
         List<T> returnList = new LinkedList<>();
 
-        while(src.charAt(this.pos+1) != ']'){
+        do {
             returnList.add(this.toObject(src,dest));
         }
+        while(!finishedList(src));
+
         return returnList;
     }
 
-    private char getNextFieldType(String jasonStr) {
-        char character = jasonStr.charAt(this.pos);
+    private char getNextFieldType(String src) {
+        char character = src.charAt(this.pos);
         while ( character != '{' && character != '[' &&
                 character != '"' && character != '\''&&
                 character != 'f' && character != 't' &&
                 !(character>='0' && character <='9')){
-            character = jasonStr.charAt(++pos);
+            character = src.charAt(++pos);
         }
-        return jasonStr.charAt(pos);
+        return src.charAt(pos);
     }
 
-    private boolean finishedObject(String substring) {
-        return getNextJsonStateChar(substring) == '}';
+    private boolean finishedObject(String src) {
+        return getNextJsonStateChar(src) == '}';
     }
 
-    private char getNextJsonStateChar(String substring) {
+    private boolean finishedList(String src) {
+        return getNextJsonStateChar(src) == ']';
+    }
 
-        char c = substring.charAt(pos);
+    private char getNextJsonStateChar(String src) {
+        char c = src.charAt(pos);
         while ( c !=']'&&
                 c !=','&&
                 c !='}') {
             pos++;
-            c = substring.charAt(pos);
+            c = src.charAt(pos);
         }
         return c;
     }
 
-    private String getNextJsonFieldName(String str) {
+    private String getNextJsonFieldName(String src) {
         int auxPos1=pos,auxPos2;
 
-        while (str.charAt(auxPos1) != '\"') { //Find first quotes
+        while (src.charAt(auxPos1) != '\"') {
             auxPos1++;
         }
         auxPos2=auxPos1+1;
-        while (str.charAt(auxPos2) != '\"') { //Find second quotes
+        while (src.charAt(auxPos2) != '\"') {
             auxPos2++;
         }
         pos=auxPos2+1;
-        return str.substring(auxPos1 + 1, auxPos2);
+        return src.substring(auxPos1 + 1, auxPos2);
     }
 
-    private Field getField(String fieldName,Class<?> instance) {
+    private Field getField(String fieldName, Class<?> instance) {
         try {
             return instance.getDeclaredField(fieldName);
         } catch (NoSuchFieldException e) {

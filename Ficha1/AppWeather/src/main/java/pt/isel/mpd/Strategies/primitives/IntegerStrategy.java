@@ -10,7 +10,7 @@ public class IntegerStrategy<T> implements TypeStrategy<T> {
 
     @Override
     public void process(String src, T instance, Field field, JsonParser jsonParser) throws Exception {
-//        jsonParser.consume(s,jsonParser::consumeSpaces);
+
         int pos = jsonParser.getPos();
         int lastNumberPos=pos;
         int i=0;
